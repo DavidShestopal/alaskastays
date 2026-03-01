@@ -1,0 +1,173 @@
+---
+---
+
+<section class="relative min-h-screen flex flex-col justify-center bg-evergreen">
+  <!-- Background layers -->
+  <div class="absolute inset-0 overflow-hidden">
+    <!-- Hero photo -->
+    <img
+      src="/Alaska-Stays-Valley-View.avif"
+      alt="Alaskan cabin overlooking a mountain valley"
+      class="absolute inset-0 w-full h-full object-cover"
+      loading="eager"
+      decoding="async"
+    />
+    <!-- Dark overlay for text readability -->
+    <div
+      class="absolute inset-0"
+      style="background:
+        linear-gradient(to right, rgba(26, 43, 34, 0.85) 0%, rgba(26, 43, 34, 0.6) 50%, rgba(26, 43, 34, 0.3) 100%),
+        linear-gradient(to top, rgba(26, 43, 34, 0.9) 0%, transparent 40%);"
+    ></div>
+
+    <!-- Dot pattern decoration (top-right, like figtitle) -->
+    <div class="absolute top-16 right-10 w-28 h-28 dot-pattern opacity-20"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 max-w-[1400px] mx-auto w-full px-6 lg:px-10 pt-32 pb-44">
+    <!-- Tagline -->
+    <div class="mb-6 animate-fade-in" style="animation-delay: 0.3s; animation-fill-mode: both;">
+      <span class="label-sm text-marigold tracking-[0.2em]">
+        The Last Frontier, Your Way
+      </span>
+    </div>
+
+    <!-- Main Headline (figtitle style: bold sans + marigold keyword accents) -->
+    <h1 class="heading-xl text-white mb-8 max-w-3xl">
+      <span class="block text-[clamp(2.8rem,8vw,5.5rem)] animate-fade-in" style="animation-delay: 0.5s; animation-fill-mode: both;">
+        We make Alaska
+      </span>
+      <span
+        class="block text-[clamp(2.8rem,8vw,5.5rem)] text-marigold italic animate-fade-in"
+        style="animation-delay: 0.7s; animation-fill-mode: both;"
+      >
+        Surprisingly
+      </span>
+      <span
+        class="block text-[clamp(2.8rem,8vw,5.5rem)] text-marigold italic animate-fade-in"
+        style="animation-delay: 0.9s; animation-fill-mode: both;"
+      >
+        Unforgettable.
+      </span>
+    </h1>
+
+    <!-- Sub-headline -->
+    <p
+      class="text-white text-lg lg:text-xl font-light max-w-xl leading-relaxed mb-12 animate-fade-in"
+      style="animation-delay: 1.1s; animation-fill-mode: both;"
+    >
+      Handpicked cabins, lodges, and retreats across Alaska's most breathtaking landscapes. Book direct for the best experience.
+    </p>
+
+    <!-- Hospitable Search Widget -->
+    <div
+      class="max-w-4xl animate-fade-in"
+      style="animation-delay: 1.3s; animation-fill-mode: both;"
+    >
+      <div class="hero-search-card rounded-2xl p-5 lg:p-6">
+        <script is:inline src="https://hospitable.b-cdn.net/direct-property-search-widget/hospitable-search-widget.prod.js"></script>
+        <hospitable-direct-mps
+          identifier="d2e62d05-ccfe-48b6-b6ae-dbdd9df20e23"
+          type="custom"
+          results-url="/search"
+          style="--hospitable-primary-color: #22382d; --hospitable-secondary-color: #e2ad37;"
+        ></hospitable-direct-mps>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spruce Treeline Silhouette -->
+  <div class="absolute bottom-0 left-0 right-0 pointer-events-none">
+    <img
+      src="/images/treeline-silhouette.svg"
+      alt=""
+      role="presentation"
+      class="w-full block"
+    />
+  </div>
+</section>
+
+<style>
+  .hero-search-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+</style>
+
+<script is:inline>
+  // Theme the Hospitable widget's shadow DOM to match the hero
+  function themeHospitableWidget() {
+    const widget = document.querySelector('.hero-search-card hospitable-direct-mps');
+    if (!widget || !widget.shadowRoot) {
+      // Widget not ready yet, retry
+      setTimeout(themeHospitableWidget, 200);
+      return;
+    }
+
+    const sr = widget.shadowRoot;
+    // Only inject once
+    if (sr.querySelector('#hero-widget-theme')) return;
+
+    const style = document.createElement('style');
+    style.id = 'hero-widget-theme';
+    style.textContent = `
+      .search-bar-container {
+        padding: 0 !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        left: 0 !important;
+        margin-bottom: 0 !important;
+      }
+
+      .search-bar {
+        gap: 0.75em !important;
+      }
+
+      input, select, .location-dropdown {
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 10px !important;
+        color: #22382d !important;
+        font-family: 'Montserrat', system-ui, sans-serif !important;
+        font-size: 0.9rem !important;
+      }
+
+      input::placeholder {
+        color: #22382d !important;
+        opacity: 0.7 !important;
+      }
+
+      input:focus, select:focus {
+        box-shadow: 0 0 0 2px rgba(226, 173, 55, 0.5) !important;
+        border-color: #e2ad37 !important;
+      }
+
+      .search-btn {
+        background: #e2ad37 !important;
+        color: #191b22 !important;
+        border-radius: 10px !important;
+        font-family: 'Montserrat', system-ui, sans-serif !important;
+        font-weight: 700 !important;
+        font-size: 0.9rem !important;
+        letter-spacing: 0.02em !important;
+        min-width: 120px !important;
+      }
+
+      .search-btn:hover {
+        filter: brightness(110%) !important;
+      }
+    `;
+    sr.prepend(style);
+  }
+
+  // Start checking once DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', themeHospitableWidget);
+  } else {
+    themeHospitableWidget();
+  }
+</script>
+

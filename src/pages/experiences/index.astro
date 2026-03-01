@@ -1,0 +1,285 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Newsletter from '../../components/Newsletter.astro';
+import Footer from '../../components/Footer.astro';
+
+const experiences = [
+  {
+    slug: 'northern-lights-photography-tour',
+    title: 'Northern Lights Photography Tour',
+    tagline: 'Capture the aurora borealis with expert guides and pro camera setups',
+    category: 'Northern Lights',
+    region: 'Interior Alaska',
+    duration: '4 hours',
+    price: 195,
+    priceNote: 'per person',
+    difficulty: 'Easy',
+    season: ['Fall', 'Winter'],
+    featured: true,
+  },
+  {
+    slug: 'kenai-fjords-glacier-cruise',
+    title: 'Kenai Fjords Glacier Cruise',
+    tagline: 'Witness calving glaciers and spot whales, puffins, and sea otters',
+    category: 'Glacier Tours',
+    region: 'Kenai Peninsula',
+    duration: 'Full day (8 hrs)',
+    price: 250,
+    priceNote: 'per person',
+    difficulty: 'Easy',
+    season: ['Summer'],
+    featured: true,
+  },
+  {
+    slug: 'combat-fishing-kenai-river',
+    title: 'Kenai River Salmon Fishing',
+    tagline: 'World-class king and silver salmon fishing with veteran guides',
+    category: 'Fishing',
+    region: 'Kenai Peninsula',
+    duration: 'Half day (5 hrs)',
+    price: 325,
+    priceNote: 'per person',
+    difficulty: 'Moderate',
+    season: ['Summer'],
+    featured: false,
+  },
+  {
+    slug: 'denali-backcountry-hike',
+    title: 'Denali Backcountry Hike',
+    tagline: 'Off-trail wilderness hiking with views of North America\'s tallest peak',
+    category: 'Hiking & Trekking',
+    region: 'Denali Region',
+    duration: 'Full day',
+    price: 275,
+    priceNote: 'per person',
+    difficulty: 'Challenging',
+    season: ['Summer', 'Fall'],
+    featured: false,
+  },
+  {
+    slug: 'dog-sledding-adventure',
+    title: 'Dog Sledding Adventure',
+    tagline: 'Mush through snowy trails with champion Iditarod sled dogs',
+    category: 'Dog Sledding',
+    region: 'Interior Alaska',
+    duration: '3 hours',
+    price: 225,
+    priceNote: 'per person',
+    difficulty: 'Easy',
+    season: ['Winter'],
+    featured: true,
+  },
+  {
+    slug: 'bear-viewing-katmai',
+    title: 'Katmai Bear Viewing',
+    tagline: 'Watch brown bears catch salmon at the famous Brooks Falls',
+    category: 'Bear Viewing',
+    region: 'Southwest Alaska',
+    duration: 'Full day (fly-in)',
+    price: 795,
+    priceNote: 'per person',
+    difficulty: 'Easy',
+    season: ['Summer'],
+    featured: true,
+  },
+  {
+    slug: 'glacier-ice-climbing',
+    title: 'Glacier Ice Climbing',
+    tagline: 'Scale blue ice walls on the Matanuska Glacier with certified guides',
+    category: 'Glacier Tours',
+    region: 'Anchorage & Mat-Su',
+    duration: '6 hours',
+    price: 199,
+    priceNote: 'per person',
+    difficulty: 'Moderate',
+    season: ['Year-round'],
+    featured: false,
+  },
+  {
+    slug: 'whale-watching-juneau',
+    title: 'Whale Watching Cruise',
+    tagline: 'Humpback whales, orcas, and sea lions in the Inside Passage',
+    category: 'Whale Watching',
+    region: 'Southeast Alaska',
+    duration: '4 hours',
+    price: 175,
+    priceNote: 'per person',
+    difficulty: 'Easy',
+    season: ['Summer'],
+    featured: false,
+  },
+  {
+    slug: 'chena-hot-springs',
+    title: 'Chena Hot Springs Soak',
+    tagline: 'Soak in natural thermal pools under the northern lights',
+    category: 'Hot Springs',
+    region: 'Interior Alaska',
+    duration: 'Half day',
+    price: 85,
+    priceNote: 'per person',
+    difficulty: 'Easy',
+    season: ['Year-round'],
+    featured: false,
+  },
+];
+
+const categories = ['All', 'Northern Lights', 'Glacier Tours', 'Fishing', 'Wildlife', 'Dog Sledding', 'Hiking & Trekking', 'Bear Viewing'];
+
+const difficultyColors: Record<string, string> = {
+  'Easy': 'bg-green-100 text-green-800',
+  'Moderate': 'bg-amber-100 text-amber-800',
+  'Challenging': 'bg-orange-100 text-orange-800',
+  'Expert': 'bg-red-100 text-red-800',
+};
+---
+
+<Layout
+  title="Experiences — Alaska Stays"
+  description="Discover Alaska's most unforgettable adventures — from northern lights tours to glacier hikes, bear viewing, and dog sledding."
+>
+  <Header />
+  <main>
+    <!-- Page Hero -->
+    <section class="relative pt-32 pb-44 lg:pt-40 lg:pb-52 bg-evergreen overflow-hidden">
+      <div class="absolute inset-0" style="background: linear-gradient(135deg, #1a2b22 0%, #22382d 50%, #2e4d3d 100%);"></div>
+      <div class="absolute top-20 right-16 w-20 h-20 dot-pattern opacity-10"></div>
+      <div class="absolute bottom-20 left-20 w-32 h-32 border border-white/[0.04] rounded-full"></div>
+
+      <div class="relative max-w-[1400px] mx-auto px-6 lg:px-10">
+        <span class="label-sm text-marigold tracking-[0.2em] mb-4 block" data-reveal>Things to Do</span>
+        <h1 class="heading-xl text-white text-5xl lg:text-7xl mb-6" data-reveal>
+          Experience the<br />
+          <span class="text-marigold italic">Last Frontier.</span>
+        </h1>
+        <p class="text-white/50 text-lg font-light max-w-lg leading-relaxed" data-reveal>
+          Adventures that will leave you speechless — from chasing the aurora
+          to watching brown bears catch salmon at arm's length.
+        </p>
+      </div>
+
+      <!-- Treeline divider -->
+      <div class="absolute bottom-0 left-0 right-0 pointer-events-none">
+        <img src="/images/treeline-silhouette.svg" alt="" role="presentation" class="w-full block" />
+      </div>
+    </section>
+
+    <!-- Categories Filter -->
+    <section class="bg-river-rock py-8 border-b border-black/5">
+      <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+        <div class="flex flex-wrap items-center gap-3">
+          {categories.map((cat) => (
+            <button
+              class={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                cat === 'All'
+                  ? 'bg-evergreen text-white'
+                  : 'bg-white/50 text-black/60 hover:bg-white/80 hover:text-black'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Experiences Grid -->
+    <section class="py-16 lg:py-24 bg-river-rock">
+      <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+        <!-- Featured Experiences -->
+        <div class="mb-16" data-reveal>
+          <h2 class="heading-md text-black text-2xl mb-8">
+            Featured <span class="text-marigold italic">Adventures</span>
+          </h2>
+          <div class="grid lg:grid-cols-2 gap-6">
+            {experiences.filter(e => e.featured).slice(0, 2).map((exp) => (
+              <a
+                href={`/experiences/${exp.slug}`}
+                class="group relative rounded-3xl overflow-hidden min-h-[350px] bg-evergreen cursor-pointer"
+                data-reveal-scale
+              >
+                <div class="absolute inset-0 transition-transform duration-700 group-hover:scale-105" style="background: linear-gradient(135deg, #2e4d3d 0%, #22382d 40%, #1a2b22 100%);"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+                <div class="absolute -top-8 -right-8 w-32 h-32 border border-white/[0.04] rounded-full"></div>
+
+                <div class="relative h-full flex flex-col justify-between p-8 lg:p-10">
+                  <div class="flex items-center justify-between">
+                    <span class="bg-marigold text-black text-xs font-bold px-4 py-1.5 rounded-full">Featured</span>
+                    <span class="text-white/50 text-sm">{exp.duration}</span>
+                  </div>
+                  <div>
+                    <span class="text-marigold/60 text-xs font-semibold tracking-wider uppercase block mb-2">{exp.category}</span>
+                    <h3 class="font-sans font-bold text-2xl lg:text-3xl text-white mb-2">{exp.title}</h3>
+                    <p class="text-white/50 text-sm font-light mb-4">{exp.tagline}</p>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-3 text-white/40 text-sm">
+                        <span>{exp.region}</span>
+                        <span class="w-1 h-1 rounded-full bg-white/20"></span>
+                        <span>{exp.season.join(', ')}</span>
+                      </div>
+                      <span class="text-marigold font-bold text-lg">
+                        ${exp.price}<span class="text-white/40 text-sm font-light"> {exp.priceNote}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="absolute inset-0 rounded-3xl border-2 border-marigold/0 group-hover:border-marigold/30 transition-all duration-500 pointer-events-none"></div>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- All Experiences -->
+        <h2 class="heading-md text-black text-2xl mb-8" data-reveal>
+          All <span class="text-marigold italic">Experiences</span>
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" data-stagger>
+          {experiences.map((exp) => (
+            <a
+              href={`/experiences/${exp.slug}`}
+              class="group block rounded-2xl overflow-hidden bg-white/60 hover:bg-white/90 border border-black/[0.04] hover:border-marigold/20 transition-all duration-500 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1"
+              data-reveal
+            >
+              <!-- Image placeholder -->
+              <div class="relative aspect-[16/10] overflow-hidden">
+                <div class="absolute inset-0 transition-transform duration-700 group-hover:scale-105" style="background: linear-gradient(135deg, #22382d 0%, #2e4d3d 100%);"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+                <div class="absolute top-3 left-3 flex gap-2">
+                  <span class="bg-white/90 backdrop-blur-sm text-black text-xs font-bold px-3 py-1 rounded-full">{exp.category}</span>
+                </div>
+                <div class="absolute bottom-3 right-3">
+                  <span class={`text-xs font-semibold px-3 py-1 rounded-full ${difficultyColors[exp.difficulty] || ''}`}>{exp.difficulty}</span>
+                </div>
+              </div>
+
+              <div class="p-5">
+                <h3 class="font-bold text-lg text-black group-hover:text-evergreen transition-colors mb-1">{exp.title}</h3>
+                <p class="text-slate-grey/70 text-xs font-light mb-3">{exp.tagline}</p>
+
+                <div class="flex flex-wrap gap-2 mb-4">
+                  {exp.season.map((s) => (
+                    <span class="text-xs text-slate-grey bg-black/[0.04] px-2.5 py-1 rounded-full">{s}</span>
+                  ))}
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-black/[0.06]">
+                  <div class="flex items-center gap-3 text-slate-grey text-xs">
+                    <span>{exp.duration}</span>
+                    <span class="w-1 h-1 rounded-full bg-slate-grey/30"></span>
+                    <span>{exp.region}</span>
+                  </div>
+                  <span class="text-black font-bold">
+                    ${exp.price}<span class="text-slate-grey text-xs font-light"> /{exp.priceNote?.replace('per ', '')}</span>
+                  </span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <Newsletter />
+  </main>
+  <Footer />
+</Layout>

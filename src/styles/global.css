@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --black: #191b22;
+    --marigold: #e2ad37;
+    --evergreen: #22382d;
+    --river-rock: #efe2ca;
+    --white: #ffffff;
+    --coral: #ff8946;
+    --slate-grey: #7e828f;
+  }
+
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    color: var(--black);
+    background-color: var(--river-rock);
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: rgba(226, 173, 55, 0.3);
+    color: var(--black);
+  }
+}
+
+/* ========================================
+   Scroll Reveal Animations
+   ======================================== */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-reveal-left] {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-reveal-left].revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+[data-reveal-scale] {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-reveal-scale].revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ========================================
+   Typography Utilities
+   ======================================== */
+.heading-xl {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+}
+
+.heading-lg {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.heading-md {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.label-sm {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Marigold accent text (like figtitle keyword highlights) */
+.text-accent {
+  color: var(--marigold);
+  font-style: italic;
+  font-weight: 800;
+}
+
+/* ========================================
+   Decorative Elements
+   ======================================== */
+.dot-pattern {
+  background-image: radial-gradient(circle, var(--marigold) 1.5px, transparent 1.5px);
+  background-size: 12px 12px;
+}
+
+.wave-divider {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ========================================
+   Button Styles (Pill-shaped like figtitle)
+   ======================================== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background-color: var(--marigold);
+  color: var(--black);
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(226, 173, 55, 0.35);
+  background-color: #edc560;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: transparent;
+  color: var(--white);
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background-color: var(--evergreen);
+  color: var(--white);
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.btn-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(34, 56, 45, 0.3);
+  background-color: #2e4d3d;
+}
+
+/* ========================================
+   Custom Scrollbar
+   ======================================== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--evergreen);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(226, 173, 55, 0.5);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(226, 173, 55, 0.7);
+}

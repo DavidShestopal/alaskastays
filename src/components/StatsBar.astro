@@ -1,0 +1,24 @@
+---
+const stats = [
+  { value: '12', label: 'Unique Properties' },
+  { value: '500+', label: '5-Star Reviews' },
+  { value: '98%', label: 'Guest Satisfaction' },
+  { value: '2019', label: 'Established' },
+];
+---
+
+<section class="relative bg-river-rock py-14 lg:py-16" data-reveal>
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+    <!-- Pill-shaped dark container (like figtitle partner bar) -->
+    <div class="bg-evergreen rounded-[2rem] py-10 lg:py-12 px-8 lg:px-16">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-0" data-stagger>
+        {stats.map((stat) => (
+          <div class="flex flex-col items-center text-center lg:border-r lg:last:border-r-0 border-white/[0.1]" data-reveal>
+            <span class="font-sans text-4xl lg:text-5xl text-marigold tracking-tight" style="font-weight:900;">{stat.value}</span>
+            <span class="text-white/50 text-xs font-semibold tracking-wider uppercase mt-2">{stat.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
