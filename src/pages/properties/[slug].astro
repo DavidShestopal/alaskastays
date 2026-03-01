@@ -368,53 +368,15 @@ const allImages: Array<{ src: string; alt: string }> = property.gallery?.length
                   </div>
                 )}
 
-                <!-- Hospitable Widget or fallback form -->
-                {property.hospitable?.widgetCode ? (
-                  <div set:html={property.hospitable.widgetCode} />
-                ) : (
-                  <>
-                    <!-- Date Inputs -->
-                    <div class="grid grid-cols-2 border border-black/15 rounded-xl overflow-hidden mb-4">
-                      <div class="p-3 border-r border-black/15">
-                        <label class="label-sm text-black/50 block mb-1" style="font-size:0.6rem;">Check-in</label>
-                        <input type="text" placeholder="Add date" class="w-full text-sm font-medium text-black bg-transparent outline-none placeholder-black/30" />
-                      </div>
-                      <div class="p-3">
-                        <label class="label-sm text-black/50 block mb-1" style="font-size:0.6rem;">Checkout</label>
-                        <input type="text" placeholder="Add date" class="w-full text-sm font-medium text-black bg-transparent outline-none placeholder-black/30" />
-                      </div>
-                    </div>
-
-                    <!-- Guests -->
-                    <div class="border border-black/15 rounded-xl p-3 mb-4">
-                      <label class="label-sm text-black/50 block mb-1" style="font-size:0.6rem;">Guests</label>
-                      <select class="w-full text-sm font-medium text-black bg-transparent outline-none cursor-pointer">
-                        {Array.from({ length: property.guests || 6 }, (_, i) => i + 1).map((n) => (
-                          <option>{n} {n === 1 ? 'guest' : 'guests'}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <!-- Book Button -->
-                    {property.hospitable?.directBookingUrl ? (
-                      <a href={property.hospitable.directBookingUrl} target="_blank" rel="noopener" class="btn-primary w-full justify-center !py-4 !text-sm mb-4 block text-center">
-                        Reserve
-                      </a>
-                    ) : (
-                      <button class="btn-primary w-full justify-center !py-4 !text-sm mb-4">
-                        Reserve
-                      </button>
-                    )}
-                    <p class="text-center text-slate-grey text-xs font-light mb-6">You won't be charged yet</p>
-
-                    <!-- Price note -->
-                    {property.basePrice && (
-                      <p class="text-slate-grey text-xs font-light text-center border-t border-black/[0.08] pt-4">
-                        Prices start at ${property.basePrice}/night. Final pricing varies by date.
-                      </p>
-                    )}
-                  </>
-                )}
+                <!-- Hospitable Booking Widget -->
+                <div id="booking-widget">
+                  <script is:inline src="https://hospitable.b-cdn.net/direct-property-search-widget/hospitable-search-widget.prod.js"></script>
+                  <hospitable-direct-mps
+                    identifier={property.hospitableId}
+                    type="property"
+                    style="--hospitable-primary-color: #22382d; --hospitable-secondary-color: #e2ad37;"
+                  ></hospitable-direct-mps>
+                </div>
               </div>
 
               <!-- Host Card -->

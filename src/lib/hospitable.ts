@@ -297,6 +297,7 @@ export interface ReviewData {
 }
 
 export interface PropertyCard {
+  hospitableId: string;
   slug: string;
   title: string;
   tagline: string;
@@ -339,6 +340,7 @@ export interface PropertyDetail extends PropertyCard {
 
 function toPropertyCard(hp: HospitableProperty): PropertyCard {
   return {
+    hospitableId: hp.id,
     slug: slugify(hp.name),
     title: hp.name,
     tagline: hp.public_name,
