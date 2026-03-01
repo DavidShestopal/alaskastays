@@ -16,6 +16,19 @@ if (!property) {
 
 const descriptionText = property.descriptionText || '';
 
+const bookingWidgets: Record<string, { iframe: string; fallback: string }> = {
+  'juniper-tree': {
+    iframe: 'https://booking.hospitable.com/widget/a12d15c1-210e-4476-b940-322c92b4887a/893068',
+    fallback: 'https://booking.hospitable.com/widget/a12d15c1-210e-4476-b940-322c92b4887a/893068',
+  },
+  'valley-view': {
+    iframe: 'https://booking.hospitable.com/widget/a12d15c1-210e-4476-b940-322c92b4887a/1115840',
+    fallback: 'https://booking.hospitable.com/widget/a12d15c1-210e-4476-b940-322c92b4887a/1115840',
+  },
+};
+
+const widget = bookingWidgets[property.slug];
+
 const badgeLabels: Record<string, string> = {
   'guest-favorite': 'Guest Favorite',
   'superhost': 'Superhost',
@@ -369,14 +382,27 @@ const allImages: Array<{ src: string; alt: string }> = property.gallery?.length
                 )}
 
                 <!-- Hospitable Booking Widget -->
-                <div id="booking-widget">
-                  <script is:inline src="https://hospitable.b-cdn.net/direct-property-search-widget/hospitable-search-widget.prod.js"></script>
-                  <hospitable-direct-mps
-                    identifier={property.hospitableId}
-                    type="property"
-                    style="--hospitable-primary-color: #22382d; --hospitable-secondary-color: #e2ad37;"
-                  ></hospitable-direct-mps>
-                </div>
+                {widget ? (
+                  <div id="booking-widget">
+                    <iframe
+                      id="booking-iframe"
+                      sandbox="allow-top-navigation allow-scripts allow-same-origin"
+                      style="width: 100%; height: 900px;"
+                      frameborder="0"
+                      src={widget.iframe}
+                    ></iframe>
+                    <a
+                      href={widget.fallback}
+                      target="_blank"
+                      rel="noopener"
+                      class="btn-primary w-full justify-center !py-4 !text-sm mt-4 block text-center"
+                    >
+                      Book on Hospitable
+                    </a>
+                  </div>
+                ) : (
+                  <p class="text-slate-grey text-sm text-center">Booking coming soon.</p>
+                )}
               </div>
 
               <!-- Host Card -->
@@ -538,16 +564,14 @@ const allImages: Array<{ src: string; alt: string }> = property.gallery?.length
     function updateIframeSrc() {
       const iframe = document.getElementById('booking-iframe') as HTMLIFrameElement | null;
       if (!iframe) return;
-      const checkin = getQueryParams('checkin');
-      const checkout = getQueryParams('checkout');
-      const adults = getQueryParams('adults');
-      const children = getQueryParams('children');
-      const infants = getQueryParams('infants');
-      const pets = getQueryParams('pets');
-      let newSrc = iframe.src;
-      newSrc += newSrc.includes('?') ? '&' : '?';
-      newSrc += `checkin=${checkin}&checkout=${checkout}&adults=${adults}&children=${children}&pets=${pets}&infants=${infants}`;
-      iframe.src = newSrc;
+      const params: string[] = [];
+      ['checkin', 'checkout', 'adults', 'children', 'infants', 'pets'].forEach((key) => {
+        const val = getQueryParams(key);
+        if (val) params.push(`${key}=${val}`);
+      });
+      if (params.length === 0) return;
+      const sep = iframe.src.includes('?') ? '&' : '?';
+      iframe.src = iframe.src + sep + params.join('&');
     }
     window.addEventListener('load', updateIframeSrc);
   </script>
