@@ -1,11 +1,11 @@
 import type { APIRoute } from 'astro';
-import { getHospitableProperties } from '../../lib/hospitable';
+import { getAllProperties } from '../../lib/hospitable';
 
 export const prerender = false;
 
 export const GET: APIRoute = async () => {
   try {
-    const properties = await getHospitableProperties();
+    const properties = await getAllProperties();
     return new Response(JSON.stringify({ data: properties }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
