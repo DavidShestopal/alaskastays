@@ -106,14 +106,25 @@ export const prerender = false;
     themeSearchWidget();
   }
 
-  // Intercept property clicks — widget links to /null because
-  // direct booking URLs aren't set in Hospitable dashboard.
-  // We redirect to our /properties/{slug} pages instead.
-  function slugify(text) {
-    return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  }
+  // Intercept property clicks — map Hospitable widget titles to our property slugs.
+  // The widget shows public_name (listing title) but our slugs come from hp.name (internal name).
+  var titleToSlug = {};
 
-  // Approach 1: Capture clicks via composedPath() which crosses shadow DOM
+  // Fetch property data to build title-to-slug mapping
+  fetch('/api/properties')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.data) {
+        d.data.forEach(function(p) {
+          // Map both tagline (public_name) and title (internal name) to slug
+          if (p.tagline) titleToSlug[p.tagline.trim().toLowerCase()] = p.slug;
+          if (p.title) titleToSlug[p.title.trim().toLowerCase()] = p.slug;
+        });
+      }
+    })
+    .catch(function() {});
+
+  // Capture clicks via composedPath() which crosses shadow DOM
   document.addEventListener('click', function(e) {
     var path = e.composedPath();
     var propertyCard = null;
@@ -129,10 +140,13 @@ export const prerender = false;
     var titleEl = propertyCard.querySelector('.property-title');
     if (!titleEl) return;
 
+    var widgetTitle = titleEl.textContent.trim().toLowerCase();
+    var slug = titleToSlug[widgetTitle];
+    if (!slug) return; // No match — let default behavior happen
+
     e.stopPropagation();
     e.preventDefault();
 
-    var slug = slugify(titleEl.textContent.trim());
     var params = new URLSearchParams(window.location.search);
     var url = '/properties/' + slug;
     if (params.toString()) {
@@ -141,8 +155,7 @@ export const prerender = false;
     window.location.href = url;
   }, true);
 
-  // Approach 2: Fallback — intercept any navigation to /null
-  // by overriding window.location assignment via a setter on the widget
+  // Fallback — intercept any navigation to /null
   (function() {
     var origAssign = window.location.assign;
     var origReplace = window.location.replace;
@@ -154,7 +167,6 @@ export const prerender = false;
       return false;
     }
 
-    // Patch location.assign
     window.location.assign = function(url) {
       if (checkNullNav(url)) {
         console.warn('[AlaskaStays] Blocked navigation to /null — property URL not configured in Hospitable.');
@@ -163,7 +175,6 @@ export const prerender = false;
       return origAssign.call(window.location, url);
     };
 
-    // Patch location.replace
     window.location.replace = function(url) {
       if (checkNullNav(url)) {
         console.warn('[AlaskaStays] Blocked navigation to /null — property URL not configured in Hospitable.');

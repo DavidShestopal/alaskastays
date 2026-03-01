@@ -5,24 +5,28 @@ import Footer from "../components/Footer.astro";
 
 const faqs = [
   {
-    q: "How far in advance should I book?",
-    a: "For peak summer season (June-August), we recommend booking 3-6 months in advance. For aurora season (September-March), 1-2 months is usually sufficient.",
+    q: "What's the difference between Juniper Tree and Valley View?",
+    a: "Juniper Tree is a cozy 2-bedroom cabin that sleeps 6, perfect for couples or small families. Valley View is a larger 3-bedroom cabin sleeping 9, ideal for groups or families wanting more space. Both are in Palmer and feature hot tubs and saunas.",
   },
   {
-    q: "Do you offer airport pickup?",
-    a: "Many of our hosts offer airport pickup or can arrange transportation. This varies by property — check individual listings or ask when booking.",
+    q: "How do I get to the properties from Anchorage?",
+    a: "Both cabins are located in Palmer, about a 45-minute drive from Anchorage. The route follows the scenic Glenn Highway with mountain views the entire way. We'll send detailed directions after booking.",
   },
   {
-    q: "What's the cancellation policy?",
-    a: "Each property sets its own cancellation policy. Most offer free cancellation up to 5 days before check-in. Check the specific listing for details.",
+    q: "Do the cabins have hot tubs and saunas?",
+    a: "Yes! Juniper Tree has a hot tub and barrel sauna on the deck with panoramic mountain views. Valley View features a hot tub and cedar sauna. Both are available year-round.",
   },
   {
-    q: "Can I bring my pet?",
-    a: 'Some properties are pet-friendly — look for the "Pet Friendly" badge. Pet fees typically range from $50-$100 per stay.',
+    q: "What's the best time to visit Palmer?",
+    a: "Summer (June-August) is great for hiking, fishing, and long daylight hours. Winter (September-March) brings northern lights, snow activities, and a peaceful atmosphere. Each season has its own magic.",
   },
   {
-    q: "Is it safe to visit Alaska in winter?",
-    a: "Absolutely. Winter is magical — northern lights, dog sledding, hot springs. Our hosts provide detailed safety info and gear recommendations for cold weather visits.",
+    q: "Is there Wi-Fi and cell service at the cabins?",
+    a: "Both properties have wireless internet. Cell service in Palmer is generally good, though coverage can vary depending on your carrier. We recommend downloading offline maps just in case.",
+  },
+  {
+    q: "Can I book directly instead of through Airbnb?",
+    a: "Absolutely — that's what we're here for! Booking direct through Alaska Stays saves you 10-20% compared to third-party platforms and gives you direct communication with your host.",
   },
 ];
 ---
@@ -77,7 +81,7 @@ const faqs = [
     <section class="py-16 lg:py-24 bg-river-rock">
       <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
         <!-- Contact Form -->
-        <div class="grid lg:grid-cols-2 gap-12 lg:gap-20">
+        <div class="max-w-2xl mx-auto">
           <div data-reveal>
             <span class="label-sm text-marigold tracking-[0.2em] mb-4 block"
               >Send a Message</span
@@ -225,48 +229,48 @@ const faqs = [
               });
             </script>
           </div>
+        </div>
 
-          <!-- FAQ -->
-          <div data-reveal>
-            <span class="label-sm text-marigold tracking-[0.2em] mb-4 block"
-              >Common Questions</span
-            >
-            <h2 class="heading-lg text-black text-3xl lg:text-4xl mb-8">
-              Quick <span class="text-marigold italic">Answers.</span>
-            </h2>
+        <!-- FAQ -->
+        <div class="max-w-2xl mx-auto mt-20" data-reveal>
+          <span class="label-sm text-marigold tracking-[0.2em] mb-4 block text-center"
+            >Common Questions</span
+          >
+          <h2 class="heading-lg text-black text-3xl lg:text-4xl mb-8 text-center">
+            Quick <span class="text-marigold italic">Answers.</span>
+          </h2>
 
-            <div class="space-y-4">
-              {
-                faqs.map((faq) => (
-                  <details class="group bg-white/40 rounded-xl border border-black/[0.04] overflow-hidden">
-                    <summary class="flex items-center justify-between p-5 cursor-pointer list-none">
-                      <span class="text-sm font-semibold text-black pr-4">
-                        {faq.q}
-                      </span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="w-5 h-5 text-slate-grey shrink-0 transition-transform duration-300 group-open:rotate-45"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M12 4.5v15m7.5-7.5h-15"
-                        />
-                      </svg>
-                    </summary>
-                    <div class="px-5 pb-5">
-                      <p class="text-slate-grey text-sm font-light leading-relaxed">
-                        {faq.a}
-                      </p>
-                    </div>
-                  </details>
-                ))
-              }
-            </div>
+          <div class="space-y-4">
+            {
+              faqs.map((faq) => (
+                <details class="group bg-white/40 rounded-xl border border-black/[0.04] overflow-hidden">
+                  <summary class="flex items-center justify-between p-5 cursor-pointer list-none">
+                    <span class="text-sm font-semibold text-black pr-4">
+                      {faq.q}
+                    </span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-5 h-5 text-slate-grey shrink-0 transition-transform duration-300 group-open:rotate-45"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                  </summary>
+                  <div class="px-5 pb-5">
+                    <p class="text-slate-grey text-sm font-light leading-relaxed">
+                      {faq.a}
+                    </p>
+                  </div>
+                </details>
+              ))
+            }
           </div>
         </div>
       </div>

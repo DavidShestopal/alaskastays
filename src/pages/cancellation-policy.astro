@@ -1,0 +1,100 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Cancellation Policy — Alaska Stays"
+  description="Learn about our cancellation and refund policies for Juniper Tree and Valley View properties."
+>
+  <Header />
+  <main>
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-evergreen overflow-hidden">
+      <div class="absolute inset-0" style="background: linear-gradient(135deg, #1a2b22 0%, #22382d 50%, #2e4d3d 100%);"></div>
+      <div class="relative max-w-[1400px] mx-auto px-6 lg:px-10">
+        <span class="label-sm text-marigold tracking-[0.2em] mb-4 block" data-reveal>Policies</span>
+        <h1 class="heading-xl text-white text-5xl lg:text-7xl mb-6" data-reveal>
+          Cancellation<br />
+          <span class="text-marigold italic">Policy.</span>
+        </h1>
+        <p class="text-white/50 text-lg font-light max-w-lg leading-relaxed" data-reveal>
+          Last updated: February 2026
+        </p>
+      </div>
+      <div class="absolute bottom-0 left-0 right-0 pointer-events-none">
+        <img src="/images/treeline-silhouette.svg" alt="" role="presentation" class="w-full block" />
+      </div>
+    </section>
+
+    <section class="py-16 lg:py-24 bg-river-rock">
+      <div class="max-w-3xl mx-auto px-6 lg:px-10 prose-custom">
+
+        <div class="space-y-12" data-reveal>
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Overview</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              Refunds are calculated according to whichever policy is active when the booking is made. All reservations become non-refundable after the last rule expires or at check-in, whichever comes earlier.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Cancellation Rules</h2>
+            <div class="space-y-4">
+              <div class="bg-white/40 rounded-xl border border-black/[0.04] p-5">
+                <div class="flex items-baseline gap-2 mb-2">
+                  <span class="text-2xl font-bold text-marigold">100%</span>
+                  <span class="text-sm font-semibold text-black">refund</span>
+                </div>
+                <p class="text-slate-grey text-sm font-light leading-relaxed">Within 24 hours after your booking is accepted, if the reservation was requested at least 7 days before check-in.</p>
+              </div>
+              <div class="bg-white/40 rounded-xl border border-black/[0.04] p-5">
+                <div class="flex items-baseline gap-2 mb-2">
+                  <span class="text-2xl font-bold text-marigold">50%</span>
+                  <span class="text-sm font-semibold text-black">refund</span>
+                </div>
+                <p class="text-slate-grey text-sm font-light leading-relaxed">When cancelled 60 or more days before check-in.</p>
+              </div>
+              <div class="bg-white/40 rounded-xl border border-black/[0.04] p-5">
+                <div class="flex items-baseline gap-2 mb-2">
+                  <span class="text-2xl font-bold text-black">No refund</span>
+                </div>
+                <p class="text-slate-grey text-sm font-light leading-relaxed">Cancellations less than 60 days before check-in are non-refundable.</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Payment</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              All guests pay 100% upfront at the time of booking.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Service Fees</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              A 4% guest service fee applies to all direct bookings. This covers payment processing and booking management.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Extenuating Circumstances</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              In cases of documented emergencies, severe weather events, or other extraordinary situations, we will work with you on a case-by-case basis to find a fair resolution. Please reach out to us as soon as possible.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">How to Cancel</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              To cancel or modify a reservation, contact us through our <a href="/contact" class="text-marigold hover:underline">contact page</a>. Please include your booking confirmation details and we'll respond within 24 hours.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

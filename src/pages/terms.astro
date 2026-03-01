@@ -1,0 +1,104 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Terms of Service — Alaska Stays"
+  description="Terms and conditions for using Alaska Stays and booking our properties."
+>
+  <Header />
+  <main>
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-evergreen overflow-hidden">
+      <div class="absolute inset-0" style="background: linear-gradient(135deg, #1a2b22 0%, #22382d 50%, #2e4d3d 100%);"></div>
+      <div class="relative max-w-[1400px] mx-auto px-6 lg:px-10">
+        <span class="label-sm text-marigold tracking-[0.2em] mb-4 block" data-reveal>Legal</span>
+        <h1 class="heading-xl text-white text-5xl lg:text-7xl mb-6" data-reveal>
+          Terms of<br />
+          <span class="text-marigold italic">Service.</span>
+        </h1>
+        <p class="text-white/50 text-lg font-light max-w-lg leading-relaxed" data-reveal>
+          Last updated: February 2026
+        </p>
+      </div>
+      <div class="absolute bottom-0 left-0 right-0 pointer-events-none">
+        <img src="/images/treeline-silhouette.svg" alt="" role="presentation" class="w-full block" />
+      </div>
+    </section>
+
+    <section class="py-16 lg:py-24 bg-river-rock">
+      <div class="max-w-3xl mx-auto px-6 lg:px-10 prose-custom">
+
+        <div class="space-y-12" data-reveal>
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Acceptance of Terms</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              By accessing and using Alaska Stays (alaskastays.com), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our website or services.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Our Services</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              Alaska Stays provides a platform for guests to discover and book vacation rental properties in Palmer, Alaska. We currently offer two properties — Juniper Tree and Valley View — both managed directly by our team. Bookings can be made through our website or through third-party platforms like Airbnb.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Booking & Reservations</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed mb-3">When you make a reservation through Alaska Stays:</p>
+            <ul class="list-disc list-inside text-slate-grey text-sm font-light leading-relaxed space-y-2 ml-2">
+              <li>All bookings are subject to availability and confirmation</li>
+              <li>Pricing displayed on our site is per night and may vary by season and dates</li>
+              <li>Additional fees (cleaning, taxes) will be clearly shown before you complete your booking</li>
+              <li>A valid payment method is required to secure your reservation</li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Guest Responsibilities</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed mb-3">As a guest at our properties, you agree to:</p>
+            <ul class="list-disc list-inside text-slate-grey text-sm font-light leading-relaxed space-y-2 ml-2">
+              <li>Follow all house rules posted at the property and in your booking confirmation</li>
+              <li>Treat the property, furnishings, and amenities with care</li>
+              <li>Not exceed the maximum occupancy listed for the property</li>
+              <li>Report any damage or maintenance issues promptly</li>
+              <li>Respect quiet hours and neighboring properties</li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Liability</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              Alaska Stays provides properties for vacation rental use. Guests use all amenities — including hot tubs, saunas, fire pits, and outdoor areas — at their own risk. We are not liable for injuries, accidents, or loss of personal property during your stay. We recommend travel insurance for all reservations.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Intellectual Property</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              All content on this website — including text, images, logos, and design — is the property of Alaska Stays and may not be reproduced without written permission.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Changes to These Terms</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              We may update these terms from time to time. Continued use of our website after changes are posted constitutes your acceptance of the updated terms.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Contact</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              Questions about these terms? Reach out through our <a href="/contact" class="text-marigold hover:underline">contact page</a>.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

@@ -1,0 +1,90 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Accessibility — Alaska Stays"
+  description="Our commitment to making Alaska Stays accessible to all guests."
+>
+  <Header />
+  <main>
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-evergreen overflow-hidden">
+      <div class="absolute inset-0" style="background: linear-gradient(135deg, #1a2b22 0%, #22382d 50%, #2e4d3d 100%);"></div>
+      <div class="relative max-w-[1400px] mx-auto px-6 lg:px-10">
+        <span class="label-sm text-marigold tracking-[0.2em] mb-4 block" data-reveal>Commitment</span>
+        <h1 class="heading-xl text-white text-5xl lg:text-7xl mb-6" data-reveal>
+          Accessibility<br />
+          <span class="text-marigold italic">Statement.</span>
+        </h1>
+        <p class="text-white/50 text-lg font-light max-w-lg leading-relaxed" data-reveal>
+          Alaska should be accessible to everyone.
+        </p>
+      </div>
+      <div class="absolute bottom-0 left-0 right-0 pointer-events-none">
+        <img src="/images/treeline-silhouette.svg" alt="" role="presentation" class="w-full block" />
+      </div>
+    </section>
+
+    <section class="py-16 lg:py-24 bg-river-rock">
+      <div class="max-w-3xl mx-auto px-6 lg:px-10 prose-custom">
+
+        <div class="space-y-12" data-reveal>
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Our Commitment</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              Alaska Stays is committed to making our website and properties welcoming to all guests, including those with disabilities. We continuously work to improve the accessibility of our digital experience and our physical properties.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Website Accessibility</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed mb-3">We strive to follow WCAG 2.1 guidelines and implement the following:</p>
+            <ul class="list-disc list-inside text-slate-grey text-sm font-light leading-relaxed space-y-2 ml-2">
+              <li>Semantic HTML structure for screen reader compatibility</li>
+              <li>Keyboard navigation support throughout the site</li>
+              <li>Descriptive alt text on all images</li>
+              <li>Sufficient color contrast for readability</li>
+              <li>Responsive design that works on all devices and screen sizes</li>
+              <li>Clear, readable typography with adjustable sizing</li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Property Accessibility</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed mb-3">
+              Our properties are cabin-style retreats in a rural Alaskan setting. Here's what to know:
+            </p>
+            <div class="space-y-4">
+              <div class="bg-white/40 rounded-xl border border-black/[0.04] p-5">
+                <p class="text-sm font-semibold text-black mb-1">Juniper Tree</p>
+                <p class="text-slate-grey text-sm font-light leading-relaxed">2-bedroom cabin with deck access. The property is on a single level with steps to enter. Please contact us for specific details about layout and access.</p>
+              </div>
+              <div class="bg-white/40 rounded-xl border border-black/[0.04] p-5">
+                <p class="text-sm font-semibold text-black mb-1">Valley View</p>
+                <p class="text-slate-grey text-sm font-light leading-relaxed">3-bedroom cabin with multiple levels. Some areas involve stairs. Please contact us for specific details about layout and access.</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Need Assistance?</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              If you have specific accessibility needs or questions about our properties, we're happy to help. Reach out through our <a href="/contact" class="text-marigold hover:underline">contact page</a> and we'll provide detailed information to help you plan your stay. We want every guest to have a comfortable experience.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Feedback</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              We welcome feedback on the accessibility of our website and properties. If you encounter any barriers or have suggestions for improvement, please let us know through our <a href="/contact" class="text-marigold hover:underline">contact page</a>.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

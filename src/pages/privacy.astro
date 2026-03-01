@@ -1,0 +1,100 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Privacy Policy — Alaska Stays"
+  description="Learn how Alaska Stays collects, uses, and protects your personal information."
+>
+  <Header />
+  <main>
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-evergreen overflow-hidden">
+      <div class="absolute inset-0" style="background: linear-gradient(135deg, #1a2b22 0%, #22382d 50%, #2e4d3d 100%);"></div>
+      <div class="relative max-w-[1400px] mx-auto px-6 lg:px-10">
+        <span class="label-sm text-marigold tracking-[0.2em] mb-4 block" data-reveal>Legal</span>
+        <h1 class="heading-xl text-white text-5xl lg:text-7xl mb-6" data-reveal>
+          Privacy<br />
+          <span class="text-marigold italic">Policy.</span>
+        </h1>
+        <p class="text-white/50 text-lg font-light max-w-lg leading-relaxed" data-reveal>
+          Last updated: February 2026
+        </p>
+      </div>
+      <div class="absolute bottom-0 left-0 right-0 pointer-events-none">
+        <img src="/images/treeline-silhouette.svg" alt="" role="presentation" class="w-full block" />
+      </div>
+    </section>
+
+    <section class="py-16 lg:py-24 bg-river-rock">
+      <div class="max-w-3xl mx-auto px-6 lg:px-10 prose-custom">
+
+        <div class="space-y-12" data-reveal>
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Information We Collect</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed mb-3">When you use Alaska Stays, we may collect the following information:</p>
+            <ul class="list-disc list-inside text-slate-grey text-sm font-light leading-relaxed space-y-2 ml-2">
+              <li>Name and email address when you submit a contact form or subscribe to our newsletter</li>
+              <li>Booking inquiry details including dates, guest count, and property preferences</li>
+              <li>Usage data such as pages visited and time spent on the site, collected through standard analytics</li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">How We Use Your Information</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed mb-3">We use the information we collect to:</p>
+            <ul class="list-disc list-inside text-slate-grey text-sm font-light leading-relaxed space-y-2 ml-2">
+              <li>Respond to your inquiries and booking requests</li>
+              <li>Send you newsletters and updates (only if you subscribe)</li>
+              <li>Improve our website and the experience we offer</li>
+              <li>Communicate important information about your reservation</li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Third-Party Services</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed mb-3">
+              We use trusted third-party services to operate our business:
+            </p>
+            <ul class="list-disc list-inside text-slate-grey text-sm font-light leading-relaxed space-y-2 ml-2">
+              <li><strong>Hospitable</strong> — Manages our property listings and booking calendar</li>
+              <li><strong>Formspree</strong> — Processes contact form and newsletter submissions</li>
+              <li><strong>Vercel</strong> — Hosts our website</li>
+            </ul>
+            <p class="text-slate-grey text-sm font-light leading-relaxed mt-3">
+              Each of these services has their own privacy policies. We do not sell or share your personal information with third parties for marketing purposes.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Cookies</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              Our website uses minimal cookies necessary for the site to function properly. We do not use advertising or tracking cookies. Third-party services embedded on our site (such as the Hospitable booking widget) may set their own cookies.
+            </p>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Your Rights</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed mb-3">You have the right to:</p>
+            <ul class="list-disc list-inside text-slate-grey text-sm font-light leading-relaxed space-y-2 ml-2">
+              <li>Request access to the personal data we hold about you</li>
+              <li>Request correction or deletion of your personal data</li>
+              <li>Unsubscribe from our newsletter at any time</li>
+              <li>Opt out of any non-essential data collection</li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 class="heading-md text-black text-2xl mb-4">Contact Us</h2>
+            <p class="text-slate-grey text-sm font-light leading-relaxed">
+              If you have questions about this privacy policy or how we handle your data, please reach out through our <a href="/contact" class="text-marigold hover:underline">contact page</a>.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
