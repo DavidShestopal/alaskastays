@@ -6,6 +6,7 @@ import Footer from '../../components/Footer.astro';
 import FareHarborWidget from '../../components/FareHarborWidget.astro';
 import { getExperienceBySlug } from '../../lib/sanity';
 import { breadcrumbSchema, experienceSchema } from '../../lib/seo';
+import { optimizeImage } from '../../lib/imageOptimize';
 
 export const prerender = false;
 
@@ -23,7 +24,7 @@ const price = experience.pricePerPerson || null;
 const descriptionText = typeof experience.description === 'string'
   ? experience.description
   : experience.summary || '';
-const coverImageUrl = experience.coverImage?.asset?.url || experience.externalImageUrl || null;
+const coverImageUrl = optimizeImage(experience.coverImage?.asset?.url || experience.externalImageUrl, 1200) || null;
 const rating = experience.fareHarbor?.ratingScore || null;
 const reviewCount = experience.fareHarbor?.ratingReviewCount || null;
 const ratingProvider = experience.fareHarbor?.ratingProvider || null;
@@ -93,7 +94,7 @@ if (experience.gallery?.length > 0) {
   }
 } else if (experience.externalGalleryUrls?.length > 0) {
   for (const url of experience.externalGalleryUrls) {
-    galleryImages.push({ url, alt: experience.title });
+    galleryImages.push({ url: optimizeImage(url, 800), alt: experience.title });
   }
 }
 

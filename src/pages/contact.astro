@@ -172,23 +172,25 @@ const faqs = [
                   placeholder="Tell us how we can help..."></textarea>
               </div>
 
-              <button type="submit" class="btn-primary !py-4 !px-10">
-                Send Message
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                  ></path>
-                </svg>
-              </button>
+              <div class="flex justify-end">
+                <button type="submit" class="btn-primary !py-4 !px-10">
+                  Send Message
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
             </form>
 
             <!-- Success/Error messages -->
@@ -299,36 +301,17 @@ const faqs = [
           Gateway to the Matanuska Valley and Alaska's best adventures
         </p>
 
-        <!-- Map placeholder -->
         <div
           class="relative rounded-2xl overflow-hidden aspect-[2/1] max-w-4xl mx-auto"
           data-reveal-scale
         >
-          <div
-            class="absolute inset-0 bg-white/[0.06] border border-white/[0.08]"
-          >
-          </div>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="text-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-12 h-12 text-white/20 mx-auto mb-3"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="1"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z"
-                ></path>
-              </svg>
-              <span class="text-white/30 text-sm"
-                >Interactive Map Coming Soon</span
-              >
-            </div>
-          </div>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30361.26999977678!2d-149.15918514872408!3d61.601221252951404!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x56c91de4eb932b0b%3A0xbe26a87be78ddd50!2sPalmer%2C%20AK%2099645!5e0!3m2!1sen!2sus!4v1773868265366!5m2!1sen!2sus"
+            class="absolute inset-0 w-full h-full border-0"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
         </div>
       </div>
     </section>

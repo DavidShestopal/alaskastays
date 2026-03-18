@@ -4,6 +4,7 @@ import Header from '../../components/Header.astro';
 import Newsletter from '../../components/Newsletter.astro';
 import Footer from '../../components/Footer.astro';
 import { getExperiences } from '../../lib/sanity';
+import { optimizeImage } from '../../lib/imageOptimize';
 
 export const prerender = false;
 
@@ -48,7 +49,7 @@ function normalizeSanity(exp: any) {
     difficulty: difficultyLabels[exp.difficulty] || exp.difficulty,
     season: (exp.season || []).map((s: string) => seasonLabels[s] || s),
     featured: exp.featured,
-    coverImage: exp.coverImage?.asset?.url || exp.externalImageUrl,
+    coverImage: optimizeImage(exp.coverImage?.asset?.url || exp.externalImageUrl, 600),
     hasFareHarbor: !!(exp.fareHarborShortname && exp.fareHarborItemId),
     rating: exp.fareHarbor?.ratingScore || null,
     reviewCount: exp.fareHarbor?.ratingReviewCount || null,

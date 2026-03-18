@@ -1,5 +1,6 @@
 ---
 import { getExperiences } from '../lib/sanity';
+import { optimizeImage } from '../lib/imageOptimize';
 
 const categoryLabels: Record<string, string> = {
   'northern-lights': 'Northern Lights', 'glacier': 'Tours', 'fishing': 'Fishing',
@@ -19,7 +20,7 @@ const experiences = (sanityExperiences || []).map((exp: any) => ({
   tagline: exp.tagline,
   category: categoryLabels[exp.category] || exp.category,
   duration: exp.duration,
-  coverImage: exp.coverImage?.asset?.url || exp.externalImageUrl,
+  coverImage: optimizeImage(exp.coverImage?.asset?.url || exp.externalImageUrl, 600),
   hasFareHarbor: !!(exp.fareHarborShortname && exp.fareHarborItemId),
 })).slice(0, 6);
 
