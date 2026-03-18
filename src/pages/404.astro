@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout
+  title="Page Not Found — Alaska Stays"
+  description="The page you're looking for doesn't exist. Browse our Alaska vacation properties and experiences instead."
+>
+  <Header />
+  <main>
+    <!-- Hero with treeline -->
+    <section class="relative pt-32 pb-44 lg:pt-40 lg:pb-52 bg-evergreen overflow-hidden">
+      <div class="absolute inset-0" style="background: linear-gradient(135deg, #1a2b22 0%, #22382d 50%, #2e4d3d 100%);"></div>
+      <div class="relative max-w-[1400px] mx-auto px-6 lg:px-10">
+        <span class="label-sm text-marigold tracking-[0.2em] mb-4 block text-center">Page Not Found</span>
+        <h1 class="heading-xl text-white text-5xl lg:text-7xl mb-6 text-center">
+          Trail Not <span class="text-marigold italic">Found.</span>
+        </h1>
+      </div>
+      <!-- Treeline divider -->
+      <div class="absolute bottom-0 left-0 right-0 pointer-events-none">
+        <img src="/images/treeline-silhouette.svg" alt="" role="presentation" class="w-full block" />
+      </div>
+    </section>
+
+    <!-- Content on cream background -->
+    <section class="bg-river-rock py-20 lg:py-28">
+      <div class="max-w-[1400px] mx-auto px-6 lg:px-10 text-center">
+        <p class="text-black/60 text-lg font-light max-w-lg mx-auto leading-relaxed mb-10">
+          Looks like this path doesn't lead anywhere. Let's get you back on track to your Alaska adventure.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="/" class="px-8 py-3 rounded-full bg-marigold text-black font-bold text-sm hover:brightness-110 transition-all">
+            Back to Home
+          </a>
+          <a href="/properties" class="px-8 py-3 rounded-full border-2 border-marigold/40 text-black/70 font-semibold text-sm hover:border-marigold hover:text-black transition-all">
+            Browse Properties
+          </a>
+          <a href="/experiences" class="px-8 py-3 rounded-full border-2 border-marigold/40 text-black/70 font-semibold text-sm hover:border-marigold hover:text-black transition-all">
+            Explore Experiences
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

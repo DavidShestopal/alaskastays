@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /studio/
+Disallow: /search
+
+Sitemap: https://alaskastays.com/sitemap-index.xml

@@ -4,6 +4,8 @@ import Header from '../../components/Header.astro';
 import Newsletter from '../../components/Newsletter.astro';
 import Footer from '../../components/Footer.astro';
 import { getPropertyBySlug } from '../../lib/hospitable';
+import { getExperiencesForProperty } from '../../lib/sanity';
+import { breadcrumbSchema, lodgingSchema } from '../../lib/seo';
 
 export const prerender = false;
 
@@ -62,6 +64,17 @@ const ruleLabels: Record<string, string> = {
   'supervise-children': 'Children must be supervised near water',
 };
 
+// Fetch nearby experiences for cross-sell
+const nearbyExperiences = await getExperiencesForProperty(slug as string) as any[];
+
+const expCategoryLabels: Record<string, string> = {
+  'northern-lights': 'Northern Lights', 'glacier': 'Tours', 'fishing': 'Fishing',
+  'wildlife': 'Wildlife', 'dog-sledding': 'Dog Sledding', 'hiking': 'Hiking & Trekking',
+  'water': 'Kayaking & Rafting', 'flightseeing': 'Flightseeing', 'hot-springs': 'Hot Springs',
+  'cultural': 'Cultural', 'winter': 'Winter Sports', 'photography': 'Photography',
+  'bear-viewing': 'Bear Viewing', 'whale-watching': 'Whale Watching',
+};
+
 // Build gallery array: API images first, fallback to cover image
 const allImages: Array<{ src: string; alt: string }> = property.gallery?.length
   ? property.gallery
@@ -73,6 +86,28 @@ const allImages: Array<{ src: string; alt: string }> = property.gallery?.length
 <Layout
   title={`${property.title} — Alaska Stays`}
   description={property.tagline || property.title}
+  ogImage={property.coverImage || undefined}
+  schema={[
+    breadcrumbSchema([
+      { name: 'Home', url: '/' },
+      { name: 'Properties', url: '/properties' },
+      { name: property.title, url: `/properties/${property.slug}` },
+    ]),
+    lodgingSchema({
+      title: property.title,
+      slug: property.slug,
+      description: property.tagline,
+      coverImage: property.coverImage,
+      rating: property.rating,
+      reviewCount: property.reviewCount,
+      location: { city: property.address?.city, state: property.address?.state },
+      pricePerNight: property.pricePerNight,
+      propertyType: property.propertyType,
+      guests: property.guests,
+      bedrooms: property.bedrooms,
+      bathrooms: property.bathrooms,
+    }),
+  ]}
 >
   <Header />
   <main>
@@ -407,6 +442,63 @@ const allImages: Array<{ src: string; alt: string }> = property.gallery?.length
               </div>
             ))}
           </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Nearby Experiences Cross-sell -->
+    {nearbyExperiences?.length > 0 && (
+      <section class="bg-river-rock py-16 lg:py-24">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+          <div class="flex items-end justify-between mb-8" data-reveal>
+            <div>
+              <span class="label-sm text-marigold tracking-[0.2em] mb-2 block" style="font-size:0.6rem;">Things to Do</span>
+              <h2 class="heading-md text-black text-2xl">
+                Nearby <span class="text-marigold italic">Experiences</span>
+              </h2>
+            </div>
+            <a href="/experiences" class="text-sm text-evergreen font-semibold hover:text-marigold transition-colors hidden sm:block">
+              View all experiences &rarr;
+            </a>
+          </div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" data-stagger>
+            {nearbyExperiences.slice(0, 3).map((exp: any) => (
+              <a
+                href={`/experiences/${exp.slug}`}
+                class="group block rounded-2xl overflow-hidden bg-white/60 hover:bg-white/90 border border-black/[0.04] hover:border-marigold/20 transition-all duration-500 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1"
+                data-reveal
+              >
+                <div class="relative aspect-[16/10] overflow-hidden">
+                  {exp.coverImage?.asset?.url ? (
+                    <img src={exp.coverImage.asset.url} alt={exp.coverImage.alt || exp.title} class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                  ) : (
+                    <div class="absolute inset-0 transition-transform duration-700 group-hover:scale-105" style="background: linear-gradient(135deg, #22382d 0%, #2e4d3d 100%);"></div>
+                  )}
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+                  <div class="absolute top-3 left-3">
+                    <span class="bg-marigold text-black text-xs font-bold px-3 py-1 rounded-full">
+                      {expCategoryLabels[exp.category] || exp.category}
+                    </span>
+                  </div>
+                </div>
+                <div class="p-5">
+                  <h3 class="font-bold text-lg text-black group-hover:text-evergreen transition-colors mb-1">{exp.title}</h3>
+                  <p class="text-slate-grey/70 text-xs font-light mb-4">{exp.tagline}</p>
+                  <div class="flex items-center justify-between pt-4 border-t border-black/[0.06]">
+                    <span class="text-slate-grey text-xs">{exp.duration}</span>
+                    {exp.pricePerPerson && (
+                      <span class="text-black font-bold">
+                        ${exp.pricePerPerson}<span class="text-slate-grey text-xs font-light"> /{(exp.priceNote || 'per person').replace('per ', '')}</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+          <a href="/experiences" class="block text-center text-sm text-evergreen font-semibold hover:text-marigold transition-colors mt-6 sm:hidden">
+            View all experiences &rarr;
+          </a>
         </div>
       </section>
     )}

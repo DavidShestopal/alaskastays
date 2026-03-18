@@ -3,65 +3,134 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Newsletter from '../../components/Newsletter.astro';
 import Footer from '../../components/Footer.astro';
+import FareHarborWidget from '../../components/FareHarborWidget.astro';
+import { getExperienceBySlug } from '../../lib/sanity';
+import { breadcrumbSchema, experienceSchema } from '../../lib/seo';
 
-const experienceData: Record<string, any> = {
-  'northern-lights-photography-tour': {
-    title: 'Northern Lights Photography Tour',
-    tagline: 'Capture the aurora borealis with expert guides and pro camera setups',
-    category: 'Northern Lights',
-    region: 'Interior Alaska',
-    duration: '4 hours',
-    price: 195,
-    priceNote: 'per person',
-    difficulty: 'Easy - All ages',
-    groupSize: { min: 2, max: 8 },
-    season: ['Fall (Sep-Nov)', 'Winter (Dec-Feb)'],
-    description: 'Join our expert photographers on an unforgettable journey into the Alaskan wilderness to witness and photograph the aurora borealis. We take you to our secret locations away from light pollution, set up professional-grade tripods and camera equipment, and guide you through every setting to capture stunning aurora photographs — whether you\'re a seasoned photographer or holding a DSLR for the first time.',
-    highlights: [
-      'Professional camera equipment and tripods provided',
-      'Secret viewing locations away from light pollution',
-      'Hot drinks and snacks included',
-      'Photos shared via digital gallery within 48 hours',
-      'Northern lights guaranteed or come again free',
-      'Small groups for personalized attention',
-    ],
-    included: ['Professional guide & photographer', 'Camera gear & tripods', 'Warm parkas and boots', 'Hot chocolate, coffee & snacks', 'Digital photo gallery', 'Hotel pickup & drop-off'],
-    notIncluded: ['Gratuity', 'Personal camera (optional)', 'Travel insurance'],
-    whatToBring: ['Warm layers (we provide outer gear)', 'Gloves and hat', 'Personal camera (optional)', 'Sense of adventure'],
-    partner: 'Aurora Quest Alaska',
-    reviews: [
-      { name: 'Alex W.', date: 'January 2026', rating: 5, text: 'Incredible experience. Our guide knew exactly where to go and the aurora was absolutely breathtaking. The photos they took for us are museum-quality.' },
-      { name: 'Priya & Raj', date: 'December 2025', rating: 5, text: 'Worth every penny. We drove 45 minutes out of Fairbanks to a hilltop with zero light pollution. The sky erupted in green and purple. Life-changing.' },
-    ],
-  },
-};
-
-export function getStaticPaths() {
-  return [
-    { params: { slug: 'northern-lights-photography-tour' } },
-    { params: { slug: 'kenai-fjords-glacier-cruise' } },
-    { params: { slug: 'combat-fishing-kenai-river' } },
-    { params: { slug: 'denali-backcountry-hike' } },
-    { params: { slug: 'dog-sledding-adventure' } },
-    { params: { slug: 'bear-viewing-katmai' } },
-    { params: { slug: 'glacier-ice-climbing' } },
-    { params: { slug: 'whale-watching-juneau' } },
-    { params: { slug: 'chena-hot-springs' } },
-  ];
-}
+export const prerender = false;
 
 const { slug } = Astro.params;
-const experience = experienceData[slug as string] || experienceData['northern-lights-photography-tour'];
+
+// Try Sanity first
+let experience = await getExperienceBySlug(slug as string);
+
+if (!experience) {
+  return Astro.redirect('/experiences');
+}
+
+// Normalize fields
+const price = experience.pricePerPerson || null;
+const descriptionText = typeof experience.description === 'string'
+  ? experience.description
+  : experience.summary || '';
+const coverImageUrl = experience.coverImage?.asset?.url || experience.externalImageUrl || null;
+const rating = experience.fareHarbor?.ratingScore || null;
+const reviewCount = experience.fareHarbor?.ratingReviewCount || null;
+const ratingProvider = experience.fareHarbor?.ratingProvider || null;
+const calendarLink = experience.fareHarbor?.calendarLink || null;
+const locationCity = experience.location?.city || null;
+const tags = experience.tags || [];
+
+const difficultyLabels: Record<string, string> = {
+  'easy': 'Easy - All ages',
+  'moderate': 'Moderate - Some fitness required',
+  'challenging': 'Challenging - Good fitness required',
+  'expert': 'Expert - Prior experience needed',
+};
+const difficultyDisplay = difficultyLabels[experience.difficulty] || experience.difficulty || '';
+
+const seasonLabels: Record<string, string> = {
+  'spring': 'Spring (Mar-May)',
+  'summer': 'Summer (Jun-Aug)',
+  'fall': 'Fall (Sep-Nov)',
+  'winter': 'Winter (Dec-Feb)',
+  'year-round': 'Year-round',
+};
+const seasons = (experience.season || []).map((s: string) => seasonLabels[s] || s);
+
+const categoryLabels: Record<string, string> = {
+  'northern-lights': 'Northern Lights',
+  'glacier': 'Tours',
+  'fishing': 'Fishing',
+  'wildlife': 'Wildlife',
+  'dog-sledding': 'Dog Sledding',
+  'hiking': 'Hiking & Trekking',
+  'water': 'Kayaking & Rafting',
+  'flightseeing': 'Flightseeing',
+  'hot-springs': 'Hot Springs',
+  'cultural': 'Cultural',
+  'winter': 'Winter Sports',
+  'photography': 'Photography',
+  'bear-viewing': 'Bear Viewing',
+  'whale-watching': 'Whale Watching',
+  'city-tour': 'Tours',
+  'atv': 'ATV & Off-Road',
+  'biking': 'Biking',
+  'climbing': 'Climbing',
+  'paddleboarding': 'Paddleboarding',
+  'elopement': 'Elopement & Wedding',
+};
+const categoryDisplay = categoryLabels[experience.category] || experience.category || '';
+
+const regionLabels: Record<string, string> = {
+  'kenai-peninsula': 'Kenai Peninsula',
+  'denali': 'Denali Region',
+  'southeast': 'Southeast Alaska',
+  'interior': 'Interior Alaska',
+  'anchorage-matsu': 'Anchorage & Mat-Su',
+  'prince-william-sound': 'Prince William Sound',
+  'kodiak': 'Kodiak Island',
+  'arctic': 'Arctic & Far North',
+  'talkeetna': 'Talkeetna',
+};
+const regionDisplay = regionLabels[experience.region] || experience.region || '';
+
+// Gallery: prefer Sanity uploads, fall back to external FareHarbor CDN URLs
+const galleryImages: { url: string; alt: string }[] = [];
+if (experience.gallery?.length > 0) {
+  for (const img of experience.gallery) {
+    if (img.asset?.url) galleryImages.push({ url: img.asset.url, alt: img.alt || experience.title });
+  }
+} else if (experience.externalGalleryUrls?.length > 0) {
+  for (const url of experience.externalGalleryUrls) {
+    galleryImages.push({ url, alt: experience.title });
+  }
+}
+
+const metaTitle = experience.seo?.metaTitle || `${experience.title} — Alaska Stays`;
+const metaDescription = experience.seo?.metaDescription || experience.summary || experience.tagline || '';
 ---
 
 <Layout
-  title={`${experience.title} — Alaska Stays`}
-  description={experience.tagline}
+  title={metaTitle}
+  description={metaDescription}
+  ogImage={coverImageUrl || undefined}
+  schema={[
+    breadcrumbSchema([
+      { name: 'Home', url: '/' },
+      { name: 'Experiences', url: '/experiences' },
+      { name: experience.title, url: `/experiences/${experience.slug || slug}` },
+    ]),
+    experienceSchema({
+      title: experience.title,
+      slug: experience.slug || slug as string,
+      tagline: experience.tagline,
+      summary: experience.summary,
+      coverImage: coverImageUrl || undefined,
+      duration: experience.duration,
+      category: experience.category,
+      rating: rating || undefined,
+      reviewCount: reviewCount || undefined,
+      partnerName: experience.partnerName,
+      location: experience.location,
+      bookingUrl: experience.bookingUrl,
+    }),
+  ]}
 >
   <Header />
   <main>
     <!-- Hero -->
-    <section class="relative pt-32 pb-16 lg:pt-40 lg:pb-24 bg-evergreen overflow-hidden">
+    <section class="relative pt-32 pb-28 lg:pt-40 lg:pb-36 bg-evergreen overflow-hidden">
       <div class="absolute inset-0" style="background: linear-gradient(135deg, #1a2b22 0%, #22382d 50%, #2e4d3d 100%);"></div>
       <div class="absolute -bottom-10 -right-10 w-48 h-48 border border-white/[0.04] rounded-full"></div>
 
@@ -77,47 +146,266 @@ const experience = experienceData[slug as string] || experienceData['northern-li
 
         <div class="grid lg:grid-cols-2 gap-10 items-center">
           <div data-reveal>
-            <span class="label-sm text-marigold tracking-[0.2em] mb-4 block">{experience.category}</span>
+            <span class="label-sm text-marigold tracking-[0.2em] mb-4 block">{categoryDisplay}</span>
             <h1 class="heading-lg text-white text-4xl lg:text-5xl mb-4">{experience.title}</h1>
-            <p class="text-white/50 text-lg font-light leading-relaxed mb-6">{experience.tagline}</p>
+            <p class="text-white/70 text-lg font-light leading-relaxed mb-4">{experience.tagline || experience.summary}</p>
+
+            {/* Rating badge */}
+            {rating && rating > 0 && (
+              <div class="flex items-center gap-3 mb-6">
+                <div class="flex items-center gap-1.5 bg-white/[0.12] rounded-full px-4 py-2">
+                  <div class="flex gap-0.5">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class={`w-3.5 h-3.5 ${i < Math.round(rating) ? 'text-marigold' : 'text-white/20'}`}
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"/>
+                      </svg>
+                    ))}
+                  </div>
+                  <span class="text-white text-sm font-semibold">{rating}</span>
+                  {reviewCount && reviewCount > 0 && (
+                    <span class="text-white/50 text-xs">({reviewCount.toLocaleString()} reviews)</span>
+                  )}
+                </div>
+                {experience.partnerName && (
+                  <span class="text-white/40 text-sm">by {experience.partnerName}</span>
+                )}
+              </div>
+            )}
 
             <!-- Quick stats -->
-            <div class="flex flex-wrap gap-4 text-sm">
-              <div class="flex items-center gap-2 bg-white/[0.08] rounded-full px-4 py-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span class="text-white/70">{experience.duration}</span>
-              </div>
-              <div class="flex items-center gap-2 bg-white/[0.08] rounded-full px-4 py-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
-                <span class="text-white/70">{experience.groupSize.min}-{experience.groupSize.max} people</span>
-              </div>
-              <div class="flex items-center gap-2 bg-white/[0.08] rounded-full px-4 py-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75z"/></svg>
-                <span class="text-white/70">{experience.difficulty}</span>
-              </div>
-              <div class="flex items-center gap-2 bg-white/[0.08] rounded-full px-4 py-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-                <span class="text-white/70">{experience.region}</span>
-              </div>
+            <div class="flex flex-wrap gap-3 text-sm">
+              {experience.duration && (
+                <div class="flex items-center gap-2 bg-white/[0.08] rounded-full px-4 py-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="text-white/70">{experience.duration}</span>
+                </div>
+              )}
+              {experience.groupSize && (
+                <div class="flex items-center gap-2 bg-white/[0.08] rounded-full px-4 py-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+                  <span class="text-white/70">{experience.groupSize.min}-{experience.groupSize.max} people</span>
+                </div>
+              )}
+              {difficultyDisplay && (
+                <div class="flex items-center gap-2 bg-white/[0.08] rounded-full px-4 py-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75z"/></svg>
+                  <span class="text-white/70">{difficultyDisplay}</span>
+                </div>
+              )}
+              {locationCity && (
+                <div class="flex items-center gap-2 bg-white/[0.08] rounded-full px-4 py-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                  <span class="text-white/70">{locationCity}, Alaska</span>
+                </div>
+              )}
+              {regionDisplay && !locationCity && (
+                <div class="flex items-center gap-2 bg-white/[0.08] rounded-full px-4 py-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                  <span class="text-white/70">{regionDisplay}</span>
+                </div>
+              )}
             </div>
           </div>
 
-          <!-- Photo placeholder -->
+          <!-- Cover Image -->
           <div class="relative rounded-2xl overflow-hidden aspect-[4/3] hidden lg:block" data-reveal-scale>
-            <div class="absolute inset-0" style="background: linear-gradient(135deg, #2e4d3d 0%, #22382d 100%);"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-              <span class="text-white/30 text-sm">Experience Photo</span>
-            </div>
+            {coverImageUrl ? (
+              <img
+                src={coverImageUrl}
+                alt={experience.coverImage?.alt || experience.title}
+                class="absolute inset-0 w-full h-full object-cover"
+                loading="eager"
+              />
+            ) : (
+              <>
+                <div class="absolute inset-0" style="background: linear-gradient(135deg, #2e4d3d 0%, #22382d 100%);"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-white/30 text-sm">Experience Photo</span>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      <div class="absolute bottom-0 left-0 right-0 translate-y-[1px]">
-        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" class="w-full h-[60px] lg:h-[80px]">
-          <path fill="#efe2ca" d="M0,40 C360,0 720,80 1080,30 C1260,10 1380,50 1440,30 L1440,80 L0,80 Z"></path>
-        </svg>
+      <!-- Treeline divider -->
+      <div class="absolute bottom-0 left-0 right-0 pointer-events-none">
+        <img src="/images/treeline-silhouette.svg" alt="" role="presentation" class="w-full block" />
       </div>
     </section>
+
+    <!-- Mobile Cover Image (below hero on mobile) -->
+    {coverImageUrl && (
+      <div class="lg:hidden bg-river-rock px-6 pt-6">
+        <div class="rounded-2xl overflow-hidden aspect-[16/9]">
+          <img
+            src={coverImageUrl}
+            alt={experience.coverImage?.alt || experience.title}
+            class="w-full h-full object-cover"
+            loading="eager"
+          />
+        </div>
+      </div>
+    )}
+
+    <!-- Photo Gallery — FareHarbor-style grid with lightbox -->
+    {galleryImages.length > 0 && (
+      <section class="bg-river-rock pt-8 lg:pt-12">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+          <div class="grid grid-cols-2 lg:grid-cols-[2fr_1fr_1fr] grid-rows-2 gap-2 rounded-2xl overflow-hidden h-[280px] sm:h-[360px] lg:h-[420px]" data-reveal>
+            {/* Large hero image — spans 2 rows on desktop */}
+            <div
+              class="relative col-span-2 lg:col-span-1 lg:row-span-2 cursor-pointer gallery-trigger"
+              data-index="0"
+            >
+              <img
+                src={galleryImages[0].url}
+                alt={galleryImages[0].alt}
+                class="absolute inset-0 w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
+                loading="eager"
+              />
+            </div>
+            {/* Top-right images */}
+            {galleryImages.slice(1, 3).map((img, i) => (
+              <div
+                class="relative hidden lg:block cursor-pointer gallery-trigger"
+                data-index={i + 1}
+              >
+                <img
+                  src={img.url}
+                  alt={img.alt}
+                  class="absolute inset-0 w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+            {/* Bottom-right images */}
+            {galleryImages.length > 3 && (
+              <div
+                class="relative hidden lg:block cursor-pointer gallery-trigger"
+                data-index="3"
+              >
+                <img
+                  src={galleryImages[3].url}
+                  alt={galleryImages[3].alt}
+                  class="absolute inset-0 w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
+                  loading="lazy"
+                />
+              </div>
+            )}
+            {galleryImages.length > 4 && (
+              <div
+                class="relative cursor-pointer gallery-trigger"
+                data-index="4"
+              >
+                <img
+                  src={galleryImages[4].url}
+                  alt={galleryImages[4].alt}
+                  class="absolute inset-0 w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
+                  loading="lazy"
+                />
+                {/* "+N more" overlay on last visible thumbnail */}
+                {galleryImages.length > 5 && (
+                  <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <span class="text-white text-lg font-semibold">+{galleryImages.length - 5}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Lightbox -->
+    {galleryImages.length > 0 && (
+      <div id="lightbox" class="fixed inset-0 z-[9999] bg-black/95 hidden items-center justify-center" role="dialog" aria-label="Photo gallery">
+        {/* Counter */}
+        <div class="absolute top-5 left-5 bg-black/60 text-white text-sm font-medium px-3 py-1.5 rounded-lg z-10">
+          <span id="lb-counter">1 / {galleryImages.length}</span>
+        </div>
+        {/* Close */}
+        <button id="lb-close" class="absolute top-5 right-5 text-white/70 hover:text-white z-10 p-2" aria-label="Close gallery">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+        {/* Prev */}
+        <button id="lb-prev" class="absolute left-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-10 p-3" aria-label="Previous photo">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+          </svg>
+        </button>
+        {/* Next */}
+        <button id="lb-next" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-10 p-3" aria-label="Next photo">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+          </svg>
+        </button>
+        {/* Image */}
+        <img id="lb-img" src="" alt="" class="max-h-[85vh] max-w-[90vw] object-contain select-none" />
+      </div>
+    )}
+
+    <script define:vars={{ galleryData: galleryImages }}>
+      const images = galleryData;
+      let currentIndex = 0;
+
+      const lightbox = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lb-img');
+      const lbCounter = document.getElementById('lb-counter');
+
+      function showImage(idx) {
+        currentIndex = ((idx % images.length) + images.length) % images.length;
+        lbImg.src = images[currentIndex].url;
+        lbImg.alt = images[currentIndex].alt;
+        lbCounter.textContent = `${currentIndex + 1} / ${images.length}`;
+      }
+
+      function openLightbox(idx) {
+        showImage(idx);
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.add('hidden');
+        lightbox.classList.remove('flex');
+        document.body.style.overflow = '';
+      }
+
+      // Gallery triggers
+      document.querySelectorAll('.gallery-trigger').forEach((el) => {
+        el.addEventListener('click', () => {
+          const idx = parseInt(el.dataset.index || '0', 10);
+          openLightbox(idx);
+        });
+      });
+
+      // Controls
+      document.getElementById('lb-close')?.addEventListener('click', closeLightbox);
+      document.getElementById('lb-prev')?.addEventListener('click', () => showImage(currentIndex - 1));
+      document.getElementById('lb-next')?.addEventListener('click', () => showImage(currentIndex + 1));
+
+      // Keyboard nav
+      document.addEventListener('keydown', (e) => {
+        if (lightbox.classList.contains('hidden')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
+      });
+
+      // Click backdrop to close
+      lightbox?.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+    </script>
 
     <!-- Main Content -->
     <section class="bg-river-rock py-12 lg:py-20">
@@ -125,154 +413,250 @@ const experience = experienceData[slug as string] || experienceData['northern-li
         <div class="grid lg:grid-cols-3 gap-10 lg:gap-16">
           <!-- Left Column -->
           <div class="lg:col-span-2">
+            <!-- Tags -->
+            {tags.length > 0 && (
+              <div class="flex flex-wrap gap-2 mb-8" data-reveal>
+                {tags.map((tag: string) => (
+                  <span class="bg-evergreen/10 text-evergreen text-xs font-medium px-3 py-1.5 rounded-full">{tag}</span>
+                ))}
+              </div>
+            )}
+
             <!-- Description -->
-            <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
-              <h2 class="heading-md text-black text-xl mb-4">About This Experience</h2>
-              <p class="text-black/70 text-[0.95rem] font-light leading-relaxed">{experience.description}</p>
-            </div>
+            {descriptionText && (
+              <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
+                <h2 class="heading-md text-black text-xl mb-4">About This Experience</h2>
+                <p class="text-black/80 text-[0.95rem] leading-relaxed">{descriptionText}</p>
+              </div>
+            )}
 
             <!-- Highlights -->
-            <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
-              <h2 class="heading-md text-black text-xl mb-6">Highlights</h2>
-              <div class="grid sm:grid-cols-2 gap-3">
-                {experience.highlights.map((h: string) => (
-                  <div class="flex items-start gap-3 p-4 rounded-xl bg-white/40">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-marigold shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
-                    </svg>
-                    <span class="text-sm text-black/80">{h}</span>
-                  </div>
-                ))}
+            {experience.highlights?.length > 0 && (
+              <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
+                <h2 class="heading-md text-black text-xl mb-6">Highlights</h2>
+                <div class="grid sm:grid-cols-2 gap-3">
+                  {experience.highlights.map((h: string) => (
+                    <div class="flex items-start gap-3 p-4 rounded-xl bg-white/40">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-marigold shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                      </svg>
+                      <span class="text-sm text-black/90">{h}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             <!-- What's Included / Not Included -->
-            <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
-              <div class="grid sm:grid-cols-2 gap-8">
-                <div>
-                  <h3 class="heading-md text-black text-lg mb-4">What's Included</h3>
-                  <div class="space-y-2.5">
-                    {experience.included.map((item: string) => (
-                      <div class="flex items-center gap-3 text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
-                        </svg>
-                        <span class="text-black/80">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h3 class="heading-md text-black text-lg mb-4">Not Included</h3>
-                  <div class="space-y-2.5">
-                    {experience.notIncluded.map((item: string) => (
-                      <div class="flex items-center gap-3 text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-grey shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                        <span class="text-black/70">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- What to Bring -->
-            <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
-              <h2 class="heading-md text-black text-xl mb-4">What to Bring</h2>
-              <div class="flex flex-wrap gap-2">
-                {experience.whatToBring.map((item: string) => (
-                  <span class="bg-white/60 text-black/70 text-sm px-4 py-2 rounded-full border border-black/[0.06]">{item}</span>
-                ))}
-              </div>
-            </div>
-
-            <!-- Season Availability -->
-            <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
-              <h2 class="heading-md text-black text-xl mb-4">When to Go</h2>
-              <div class="flex flex-wrap gap-3">
-                {experience.season.map((s: string) => (
-                  <span class="bg-evergreen/10 text-evergreen text-sm font-semibold px-5 py-2.5 rounded-full">{s}</span>
-                ))}
-              </div>
-            </div>
-
-            <!-- Reviews -->
-            <div data-reveal>
-              <h2 class="heading-md text-black text-xl mb-6">Guest Reviews</h2>
-              <div class="space-y-4">
-                {experience.reviews.map((review: any) => (
-                  <div class="p-6 rounded-2xl bg-white/40 border border-black/[0.04]">
-                    <div class="flex items-center gap-3 mb-3">
-                      <div class="w-10 h-10 rounded-full bg-evergreen/15 flex items-center justify-center">
-                        <span class="text-evergreen text-sm font-bold">{review.name[0]}</span>
-                      </div>
-                      <div>
-                        <span class="text-sm font-semibold text-black">{review.name}</span>
-                        <span class="text-xs text-slate-grey block">{review.date}</span>
-                      </div>
-                      <div class="ml-auto flex gap-0.5">
-                        {Array.from({ length: review.rating }).map(() => (
-                          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-marigold" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"/>
-                          </svg>
+            {(experience.included?.length > 0 || experience.notIncluded?.length > 0) && (
+              <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
+                <div class="grid sm:grid-cols-2 gap-8">
+                  {experience.included?.length > 0 && (
+                    <div>
+                      <h3 class="heading-md text-black text-lg mb-4">What's Included</h3>
+                      <div class="space-y-2.5">
+                        {experience.included.map((item: string) => (
+                          <div class="flex items-center gap-3 text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                            </svg>
+                            <span class="text-black/90">{item}</span>
+                          </div>
                         ))}
                       </div>
                     </div>
-                    <p class="text-black/70 text-sm font-light leading-relaxed">{review.text}</p>
-                  </div>
-                ))}
+                  )}
+                  {experience.notIncluded?.length > 0 && (
+                    <div>
+                      <h3 class="heading-md text-black text-lg mb-4">Not Included</h3>
+                      <div class="space-y-2.5">
+                        {experience.notIncluded.map((item: string) => (
+                          <div class="flex items-center gap-3 text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-grey shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                            <span class="text-black/70">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
+
+            <!-- What to Bring -->
+            {experience.whatToBring?.length > 0 && (
+              <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
+                <h2 class="heading-md text-black text-xl mb-4">What to Bring</h2>
+                <div class="flex flex-wrap gap-2">
+                  {experience.whatToBring.map((item: string) => (
+                    <span class="bg-white/60 text-black/70 text-sm px-4 py-2 rounded-full border border-black/[0.06]">{item}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <!-- Meeting Point -->
+            {experience.meetingPoint && (
+              <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
+                <h2 class="heading-md text-black text-xl mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                  Meeting Point
+                </h2>
+                <p class="text-black/80 text-[0.95rem] leading-relaxed whitespace-pre-line">{experience.meetingPoint}</p>
+              </div>
+            )}
+
+            <!-- Itinerary -->
+            {experience.itinerary?.length > 0 && (
+              <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
+                <h2 class="heading-md text-black text-xl mb-6 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+                  Itinerary
+                </h2>
+                <div class="space-y-4">
+                  {experience.itinerary.map((step: string, i: number) => (
+                    <div class="flex gap-4">
+                      <div class="flex flex-col items-center">
+                        <div class="w-8 h-8 rounded-full bg-evergreen/15 flex items-center justify-center shrink-0">
+                          <span class="text-evergreen text-sm font-bold">{i + 1}</span>
+                        </div>
+                        {i < experience.itinerary.length - 1 && (
+                          <div class="w-px flex-1 bg-evergreen/10 mt-2"></div>
+                        )}
+                      </div>
+                      <p class="text-black/80 text-sm leading-relaxed pt-1.5 pb-2">{step}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <!-- Check-in Details -->
+            {experience.checkInDetails && (
+              <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
+                <h2 class="heading-md text-black text-xl mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Check-in Details
+                </h2>
+                <p class="text-black/80 text-[0.95rem] leading-relaxed whitespace-pre-line">{experience.checkInDetails}</p>
+              </div>
+            )}
+
+            <!-- Age & Accessibility Info -->
+            {(experience.minAge || experience.maxAge || experience.accessibility) && (
+              <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
+                <h2 class="heading-md text-black text-xl mb-4 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/></svg>
+                  Good to Know
+                </h2>
+                <div class="space-y-3">
+                  {(experience.minAge || experience.maxAge) && (
+                    <div class="flex items-center gap-3 text-sm">
+                      <span class="text-black/50 font-medium">Age requirement:</span>
+                      <span class="text-black/80">
+                        {experience.minAge && experience.maxAge
+                          ? `${experience.minAge} - ${experience.maxAge} years`
+                          : experience.minAge
+                            ? `${experience.minAge}+ years`
+                            : `Up to ${experience.maxAge} years`
+                        }
+                      </span>
+                    </div>
+                  )}
+                  {experience.accessibility && (
+                    <p class="text-black/70 text-sm font-light leading-relaxed whitespace-pre-line">{experience.accessibility}</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <!-- FAQs -->
+            {experience.faqs?.length > 0 && (
+              <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
+                <h2 class="heading-md text-black text-xl mb-6 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-marigold" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/></svg>
+                  Frequently Asked Questions
+                </h2>
+                <div class="space-y-4">
+                  {experience.faqs.map((faq: { question: string; answer: string }) => (
+                    <details class="group rounded-xl bg-white/40 border border-black/[0.04] overflow-hidden">
+                      <summary class="flex items-center justify-between cursor-pointer p-5 text-sm font-semibold text-black hover:bg-white/60 transition-colors">
+                        {faq.question}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-grey shrink-0 ml-2 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                        </svg>
+                      </summary>
+                      <div class="px-5 pb-5 text-sm text-black/80 leading-relaxed">{faq.answer}</div>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <!-- Season Availability -->
+            {seasons.length > 0 && (
+              <div class="mb-10 pb-10 border-b border-black/[0.08]" data-reveal>
+                <h2 class="heading-md text-black text-xl mb-4">When to Go</h2>
+                <div class="flex flex-wrap gap-3">
+                  {seasons.map((s: string) => (
+                    <span class="bg-evergreen/10 text-evergreen text-sm font-semibold px-5 py-2.5 rounded-full">{s}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <!-- Partner Info -->
+            {experience.partnerName && (
+              <div data-reveal>
+                <h2 class="heading-md text-black text-xl mb-4">About the Operator</h2>
+                <div class="p-6 rounded-2xl bg-white/40 border border-black/[0.04]">
+                  <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-evergreen/15 flex items-center justify-center">
+                      <span class="text-evergreen text-lg font-bold">{experience.partnerName[0]}</span>
+                    </div>
+                    <div>
+                      <span class="text-sm font-semibold text-black block">{experience.partnerName}</span>
+                      {locationCity && (
+                        <span class="text-xs text-slate-grey">{locationCity}, Alaska</span>
+                      )}
+                    </div>
+                    {rating && rating > 0 && (
+                      <div class="ml-auto flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-marigold" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"/>
+                        </svg>
+                        <span class="text-sm font-semibold text-black">{rating}</span>
+                        {reviewCount && reviewCount > 0 && (
+                          <span class="text-xs text-slate-grey">({reviewCount.toLocaleString()})</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
-          <!-- Right Column - Booking Sidebar -->
+          <!-- Right Column - Booking Sidebar with Calendar -->
           <div class="lg:col-span-1">
-            <div class="sticky top-28">
-              <div class="rounded-2xl border border-black/[0.08] bg-white/70 p-6 shadow-lg shadow-black/5" data-reveal>
-                <div class="flex items-baseline gap-1 mb-2">
-                  <span class="text-3xl font-bold text-black">${experience.price}</span>
-                  <span class="text-slate-grey text-sm font-light">/ {experience.priceNote?.replace('per ', '')}</span>
-                </div>
-                <p class="text-slate-grey text-xs font-light mb-6">Operated by {experience.partner}</p>
-
-                <div class="border border-black/15 rounded-xl p-3 mb-3">
-                  <label class="label-sm text-black/50 block mb-1" style="font-size:0.6rem;">Date</label>
-                  <input type="date" class="w-full text-sm font-medium text-black bg-transparent outline-none" />
-                </div>
-
-                <div class="border border-black/15 rounded-xl p-3 mb-4">
-                  <label class="label-sm text-black/50 block mb-1" style="font-size:0.6rem;">Number of Guests</label>
-                  <select class="w-full text-sm font-medium text-black bg-transparent outline-none cursor-pointer">
-                    {Array.from({ length: experience.groupSize.max }, (_, i) => i + 1).map((n) => (
-                      <option>{n} {n === 1 ? 'guest' : 'guests'}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <button class="btn-primary w-full justify-center !py-4 !text-sm mb-3">
-                  Check Availability
-                </button>
-                <p class="text-center text-slate-grey text-xs font-light mb-6">Free cancellation up to 24 hours before</p>
-
-                <!-- Details -->
-                <div class="space-y-3 text-sm border-t border-black/[0.08] pt-4">
-                  <div class="flex items-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-grey" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span class="text-black/70">Duration: <strong>{experience.duration}</strong></span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-grey" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
-                    <span class="text-black/70">Group size: <strong>{experience.groupSize.min}-{experience.groupSize.max}</strong></span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-grey" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
-                    <span class="text-black/70">Difficulty: <strong>{experience.difficulty}</strong></span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <FareHarborWidget
+              fareHarborShortname={experience.fareHarborShortname}
+              fareHarborItemId={experience.fareHarborItemId}
+              bookingUrl={experience.bookingUrl}
+              price={undefined}
+              priceNote={experience.priceNote}
+              partnerName={experience.partnerName}
+              duration={experience.duration}
+              difficulty={difficultyDisplay}
+              groupSize={experience.groupSize}
+              ratingScore={rating}
+              ratingReviewCount={reviewCount}
+              ratingProvider={ratingProvider}
+              calendarLink={calendarLink}
+              locationCity={locationCity}
+            />
           </div>
         </div>
       </div>

@@ -9,19 +9,17 @@ const footerLinks = {
     { label: 'Book Your Stay', href: '/search' },
   ],
   experiences: [
-    { label: 'Northern Lights', href: '/experiences' },
+    { label: 'All Experiences', href: '/experiences' },
     { label: 'Glacier Tours', href: '/experiences' },
-    { label: 'Sport Fishing', href: '/experiences' },
-    { label: 'Wildlife Safaris', href: '/experiences' },
-    { label: 'Dog Sledding', href: '/experiences' },
+    { label: 'Flightseeing', href: '/experiences' },
+    { label: 'Wildlife & Whale Watching', href: '/experiences' },
+    { label: 'Hiking & Biking', href: '/experiences' },
   ],
   company: [
     { label: 'About Us', href: '/about' },
     { label: 'Contact', href: '/contact' },
-    { label: 'FAQ', href: '/contact' },
   ],
   support: [
-    { label: 'Help Center', href: '/contact' },
     { label: 'Cancellation Policy', href: '/cancellation-policy' },
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms of Service', href: '/terms' },
@@ -43,20 +41,20 @@ const footerLinks = {
             <path fill="#E2AD37" d="M250.54 52.432c-2.208 0-4.368-.256-6.48-.768-2.08-.512-3.76-1.152-5.04-1.92l2.736-6.24c1.216.736 2.64 1.328 4.272 1.776 1.632.416 3.232.624 4.8.624 1.536 0 2.592-.16 3.168-.48.608-.32.912-.752.912-1.296 0-.512-.288-.88-.864-1.104-.544-.256-1.28-.448-2.208-.576-.896-.128-1.888-.272-2.976-.432a42.835 42.835 0 0 1-3.312-.624 12.038 12.038 0 0 1-3.024-1.248 6.497 6.497 0 0 1-2.16-2.304c-.544-.96-.816-2.176-.816-3.648 0-1.664.48-3.136 1.44-4.416.992-1.312 2.432-2.336 4.32-3.072 1.888-.768 4.192-1.152 6.912-1.152 1.824 0 3.664.192 5.52.576 1.888.352 3.472.896 4.752 1.632l-2.736 6.192c-1.28-.736-2.56-1.232-3.84-1.488-1.28-.288-2.496-.432-3.648-.432-1.536 0-2.624.176-3.264.528-.608.352-.912.784-.912 1.296s.272.912.816 1.2c.544.256 1.264.464 2.16.624.928.128 1.936.272 3.024.432 1.088.128 2.176.336 3.264.624 1.12.288 2.128.72 3.024 1.296a5.98 5.98 0 0 1 2.208 2.256c.544.928.816 2.128.816 3.6 0 1.6-.496 3.04-1.488 4.32-.96 1.28-2.4 2.304-4.32 3.072-1.888.768-4.24 1.152-7.056 1.152Zm28.41 0c-3.328 0-5.92-.816-7.776-2.448-1.856-1.664-2.784-4.16-2.784-7.488v-22.32h9.12V42.4c0 .928.256 1.664.768 2.208.512.512 1.168.768 1.968.768 1.088 0 2.016-.272 2.784-.816l2.256 6.384c-.768.512-1.712.88-2.832 1.104a15.68 15.68 0 0 1-3.504.384ZM264.598 33.76v-6.816h18.864v6.816h-18.864ZM304.691 52v-4.848l-.624-1.2v-8.928c0-1.44-.448-2.544-1.344-3.312-.864-.8-2.256-1.2-4.176-1.2-1.248 0-2.512.208-3.792.624-1.28.384-2.368.928-3.264 1.632l-3.072-6.192c1.472-.96 3.232-1.696 5.28-2.208a24.393 24.393 0 0 1 6.192-.816c4.224 0 7.488.976 9.792 2.928 2.336 1.92 3.504 4.944 3.504 9.072V52h-8.496Zm-7.68.432c-2.08 0-3.84-.352-5.28-1.056-1.44-.704-2.544-1.664-3.312-2.88-.736-1.216-1.104-2.576-1.104-4.08 0-1.6.4-2.976 1.2-4.128.832-1.184 2.096-2.08 3.792-2.688 1.696-.64 3.888-.96 6.576-.96h6.144v4.752h-4.896c-1.472 0-2.512.24-3.12.72-.576.48-.864 1.12-.864 1.92 0 .8.304 1.44.912 1.92.608.48 1.44.72 2.496.72.992 0 1.888-.24 2.688-.72.832-.512 1.44-1.28 1.824-2.304l1.248 3.36c-.48 1.792-1.424 3.152-2.832 4.08-1.376.896-3.2 1.344-5.472 1.344Zm25.928 9.312c-1.376 0-2.768-.224-4.176-.672-1.376-.416-2.496-.976-3.36-1.68l3.168-6.384c.544.48 1.168.848 1.872 1.104a5.904 5.904 0 0 0 2.16.432c.992 0 1.776-.224 2.352-.672.576-.448 1.072-1.152 1.488-2.112l1.2-3.024.72-.912 8.832-21.84h8.688l-11.232 27.072c-.896 2.24-1.936 3.984-3.12 5.232-1.152 1.28-2.448 2.176-3.888 2.688-1.408.512-2.976.768-4.704.768Zm3.552-8.64-11.472-27.12h9.36l8.448 21.024-6.336 6.096Zm30.784-.672c-2.208 0-4.368-.256-6.48-.768-2.08-.512-3.76-1.152-5.04-1.92l2.736-6.24c1.216.736 2.64 1.328 4.272 1.776 1.632.416 3.232.624 4.8.624 1.536 0 2.592-.16 3.168-.48.608-.32.912-.752.912-1.296 0-.512-.288-.88-.864-1.104-.544-.256-1.28-.448-2.208-.576-.896-.128-1.888-.272-2.976-.432a42.835 42.835 0 0 1-3.312-.624 12.038 12.038 0 0 1-3.024-1.248 6.497 6.497 0 0 1-2.16-2.304c-.544-.96-.816-2.176-.816-3.648 0-1.664.48-3.136 1.44-4.416.992-1.312 2.432-2.336 4.32-3.072 1.888-.768 4.192-1.152 6.912-1.152 1.824 0 3.664.192 5.52.576 1.888.352 3.472.896 4.752 1.632l-2.736 6.192c-1.28-.736-2.56-1.232-3.84-1.488-1.28-.288-2.496-.432-3.648-.432-1.536 0-2.624.176-3.264.528-.608.352-.912.784-.912 1.296s.272.912.816 1.2c.544.256 1.264.464 2.16.624.928.128 1.936.272 3.024.432 1.088.128 2.176.336 3.264.624 1.12.288 2.128.72 3.024 1.296a5.98 5.98 0 0 1 2.208 2.256c.544.928.816 2.128.816 3.6 0 1.6-.496 3.04-1.488 4.32-.96 1.28-2.4 2.304-4.32 3.072-1.888.768-4.24 1.152-7.056 1.152Zm20.634 0c-1.536 0-2.832-.512-3.888-1.536s-1.584-2.32-1.584-3.888c0-1.632.528-2.928 1.584-3.888 1.056-.992 2.352-1.488 3.888-1.488s2.832.496 3.888 1.488c1.056.96 1.584 2.256 1.584 3.888 0 1.568-.528 2.864-1.584 3.888s-2.352 1.536-3.888 1.536Z"/>
           </svg>
         </a>
-        <p class="text-white/30 text-sm font-light leading-relaxed max-w-xs mb-8">
+        <p class="text-white/60 text-sm font-light leading-relaxed max-w-xs mb-8">
           Handpicked wilderness retreats across Alaska's most breathtaking landscapes.
           Your adventure starts here.
         </p>
 
         <!-- Social Links -->
         <div class="flex gap-4">
-          <a href="#" class="w-10 h-10 rounded-full border border-white/[0.1] flex items-center justify-center text-white/30 hover:text-marigold hover:border-marigold/30 transition-all duration-300" aria-label="Instagram">
+          <a href="https://www.instagram.com/alaska_stays/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full border border-white/[0.1] flex items-center justify-center text-white/50 hover:text-marigold hover:border-marigold/30 transition-all duration-300" aria-label="Instagram">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
           </a>
-          <a href="#" class="w-10 h-10 rounded-full border border-white/[0.1] flex items-center justify-center text-white/30 hover:text-marigold hover:border-marigold/30 transition-all duration-300" aria-label="Facebook">
+          <a href="https://www.facebook.com/people/Juniper-Tree-Guest-House/100089645768293/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full border border-white/[0.1] flex items-center justify-center text-white/50 hover:text-marigold hover:border-marigold/30 transition-all duration-300" aria-label="Facebook">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           </a>
-          <a href="#" class="w-10 h-10 rounded-full border border-white/[0.1] flex items-center justify-center text-white/30 hover:text-marigold hover:border-marigold/30 transition-all duration-300" aria-label="YouTube">
+          <a href="https://www.youtube.com/channel/UCm-7doEXjAI8jkWUhBaFLzw" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full border border-white/[0.1] flex items-center justify-center text-white/50 hover:text-marigold hover:border-marigold/30 transition-all duration-300" aria-label="YouTube">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
           </a>
         </div>
@@ -64,11 +62,11 @@ const footerLinks = {
 
       <!-- Link Columns -->
       <div>
-        <h4 class="label-sm text-marigold/60 mb-5">Properties</h4>
+        <h4 class="label-sm text-marigold mb-5">Properties</h4>
         <ul class="space-y-3">
           {footerLinks.properties.map((link) => (
             <li>
-              <a href={link.href} class="text-white/30 text-sm font-light hover:text-marigold transition-colors duration-300">
+              <a href={link.href} class="text-white/60 text-sm font-light hover:text-marigold transition-colors duration-300">
                 {link.label}
               </a>
             </li>
@@ -77,11 +75,11 @@ const footerLinks = {
       </div>
 
       <div>
-        <h4 class="label-sm text-marigold/60 mb-5">Experiences</h4>
+        <h4 class="label-sm text-marigold mb-5">Experiences</h4>
         <ul class="space-y-3">
           {footerLinks.experiences.map((link) => (
             <li>
-              <a href={link.href} class="text-white/30 text-sm font-light hover:text-marigold transition-colors duration-300">
+              <a href={link.href} class="text-white/60 text-sm font-light hover:text-marigold transition-colors duration-300">
                 {link.label}
               </a>
             </li>
@@ -90,11 +88,11 @@ const footerLinks = {
       </div>
 
       <div>
-        <h4 class="label-sm text-marigold/60 mb-5">Company</h4>
+        <h4 class="label-sm text-marigold mb-5">Company</h4>
         <ul class="space-y-3">
           {footerLinks.company.map((link) => (
             <li>
-              <a href={link.href} class="text-white/30 text-sm font-light hover:text-marigold transition-colors duration-300">
+              <a href={link.href} class="text-white/60 text-sm font-light hover:text-marigold transition-colors duration-300">
                 {link.label}
               </a>
             </li>
@@ -103,11 +101,11 @@ const footerLinks = {
       </div>
 
       <div>
-        <h4 class="label-sm text-marigold/60 mb-5">Support</h4>
+        <h4 class="label-sm text-marigold mb-5">Support</h4>
         <ul class="space-y-3">
           {footerLinks.support.map((link) => (
             <li>
-              <a href={link.href} class="text-white/30 text-sm font-light hover:text-marigold transition-colors duration-300">
+              <a href={link.href} class="text-white/60 text-sm font-light hover:text-marigold transition-colors duration-300">
                 {link.label}
               </a>
             </li>
@@ -118,10 +116,10 @@ const footerLinks = {
 
     <!-- Bottom Bar -->
     <div class="border-t border-white/[0.06] py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p class="text-white/20 text-xs">
+      <p class="text-white/50 text-xs">
         &copy; {currentYear} Alaska Stays. All rights reserved.
       </p>
-      <p class="text-white/10 text-xs">
+      <p class="text-white/30 text-xs">
         Crafted with care in Anchorage, Alaska
       </p>
     </div>
