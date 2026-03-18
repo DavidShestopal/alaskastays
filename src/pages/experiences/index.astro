@@ -268,7 +268,7 @@ const difficultyColors: Record<string, string> = {
                 data-reveal-scale
               >
                 {exp.coverImage ? (
-                  <img src={exp.coverImage} alt={exp.title} class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                  <img src={exp.coverImage} alt={exp.title} width="600" height="375" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                 ) : (
                   <div class="absolute inset-0 transition-transform duration-700 group-hover:scale-105" style="background: linear-gradient(135deg, #2e4d3d 0%, #22382d 40%, #1a2b22 100%);"></div>
                 )}
@@ -310,7 +310,7 @@ const difficultyColors: Record<string, string> = {
               <!-- Image -->
               <div class="relative aspect-[16/10] overflow-hidden">
                 {exp.coverImage ? (
-                  <img src={exp.coverImage} alt={exp.title} class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                  <img src={exp.coverImage} alt={exp.title} width="600" height="375" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                 ) : (
                   <div class="absolute inset-0 transition-transform duration-700 group-hover:scale-105" style="background: linear-gradient(135deg, #22382d 0%, #2e4d3d 100%);"></div>
                 )}
