@@ -9,7 +9,7 @@ export const prerender = false;
 <Layout title="Search Properties — Alaska Stays" description="Search available cabins, lodges, and retreats across Alaska. Check availability and book direct.">
   <Header />
   <main>
-    <section class="pt-28 pb-16 bg-river-rock min-h-screen">
+    <section class="pt-28 pb-16 bg-river-rock" style="min-height: calc(100vh - 80px);">
       <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
         <!-- Breadcrumb -->
         <nav class="flex items-center gap-2 text-sm text-slate-grey mb-8">
@@ -34,6 +34,66 @@ export const prerender = false;
 </Layout>
 
 <script is:inline>
+  // Keep the section tall enough for the dynamically-rendered widget
+  (function() {
+    var container = document.getElementById('search-results-widget');
+    if (!container) return;
+    var section = container.closest('section');
+    if (!section) return;
+    var hospEl = container.querySelector('hospitable-direct-mps');
+
+    function adjustHeight() {
+      // Measure the true content height including shadow DOM internals
+      var contentH = container.scrollHeight;
+      // Also check inside shadow root for the real rendered height
+      if (hospEl && hospEl.shadowRoot) {
+        var inner = hospEl.shadowRoot.querySelector('.search-results-container, .properties-container, [class*="container"]');
+        if (inner) {
+          contentH = Math.max(contentH, inner.scrollHeight + hospEl.offsetTop);
+        }
+        // Fallback: measure all children in shadow root
+        var kids = hospEl.shadowRoot.children;
+        var maxBottom = 0;
+        for (var i = 0; i < kids.length; i++) {
+          if (kids[i].nodeType === 1) {
+            var rect = kids[i].getBoundingClientRect();
+            var bottom = rect.bottom + window.scrollY;
+            if (bottom > maxBottom) maxBottom = bottom;
+          }
+        }
+        if (maxBottom > 0) {
+          var sectionTop = section.getBoundingClientRect().top + window.scrollY;
+          contentH = Math.max(contentH, maxBottom - sectionTop + 200);
+        }
+      }
+      var viewportMin = window.innerHeight - 80;
+      section.style.minHeight = Math.max(contentH + 200, viewportMin) + 'px';
+    }
+
+    // Watch for widget size changes (cards loading in)
+    var ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(adjustHeight) : null;
+    if (ro) ro.observe(container);
+
+    // Also try to observe inside shadow DOM once it's available
+    function observeShadow() {
+      if (hospEl && hospEl.shadowRoot) {
+        if (ro) ro.observe(hospEl);
+        var inner = hospEl.shadowRoot.firstElementChild;
+        if (inner && ro) ro.observe(inner);
+        return true;
+      }
+      return false;
+    }
+
+    // Poll while widget initializes + observe shadow when ready
+    var polls = 0;
+    var pollTimer = setInterval(function() {
+      adjustHeight();
+      observeShadow();
+      if (++polls > 60) clearInterval(pollTimer);
+    }, 500);
+  })();
+
   // Theme the Hospitable search widget on the search page
   function themeSearchWidget() {
     const widget = document.querySelector('#search-results-widget hospitable-direct-mps');
