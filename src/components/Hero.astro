@@ -68,8 +68,7 @@
       class="relative z-20 max-w-4xl animate-fade-in"
       style="animation-delay: 1.3s; animation-fill-mode: both;"
     >
-      <div class="hero-search-card rounded-2xl p-5 lg:p-6">
-        <script is:inline src="https://hospitable.b-cdn.net/direct-property-search-widget/hospitable-search-widget.prod.js"></script>
+      <div class="hero-search-card rounded-2xl p-5 lg:p-6 min-h-[120px] lg:min-h-[80px]" id="hospitable-container">
         <hospitable-direct-mps
           identifier="d2e62d05-ccfe-48b6-b6ae-dbdd9df20e23"
           type="custom"
@@ -101,76 +100,37 @@
 </style>
 
 <script is:inline>
+  // Lazy-load Hospitable widget script after page renders
+  function loadHospitableWidget() {
+    var s = document.createElement('script');
+    s.src = 'https://hospitable.b-cdn.net/direct-property-search-widget/hospitable-search-widget.prod.js';
+    s.async = true;
+    s.onload = function() { setTimeout(themeHospitableWidget, 500); };
+    document.head.appendChild(s);
+  }
+
   // Theme the Hospitable widget's shadow DOM to match the hero
   function themeHospitableWidget() {
-    const widget = document.querySelector('.hero-search-card hospitable-direct-mps');
+    var widget = document.querySelector('#hospitable-container hospitable-direct-mps');
     if (!widget || !widget.shadowRoot) {
-      // Widget not ready yet, retry
       setTimeout(themeHospitableWidget, 200);
       return;
     }
 
-    const sr = widget.shadowRoot;
-    // Only inject once
+    var sr = widget.shadowRoot;
     if (sr.querySelector('#hero-widget-theme')) return;
 
-    const style = document.createElement('style');
+    var style = document.createElement('style');
     style.id = 'hero-widget-theme';
-    style.textContent = `
-      .search-bar-container {
-        padding: 0 !important;
-        width: 100% !important;
-        margin-left: 0 !important;
-        left: 0 !important;
-        margin-bottom: 0 !important;
-      }
-
-      .search-bar {
-        gap: 0.75em !important;
-      }
-
-      input, select, .location-dropdown {
-        background: rgba(255, 255, 255, 0.95) !important;
-        border: 1px solid rgba(255, 255, 255, 0.3) !important;
-        border-radius: 10px !important;
-        color: #22382d !important;
-        font-family: 'Montserrat', system-ui, sans-serif !important;
-        font-size: 0.9rem !important;
-      }
-
-      input::placeholder {
-        color: #22382d !important;
-        opacity: 0.7 !important;
-      }
-
-      input:focus, select:focus {
-        box-shadow: 0 0 0 2px rgba(226, 173, 55, 0.5) !important;
-        border-color: #e2ad37 !important;
-      }
-
-      .search-btn {
-        background: #e2ad37 !important;
-        color: #191b22 !important;
-        border-radius: 10px !important;
-        font-family: 'Montserrat', system-ui, sans-serif !important;
-        font-weight: 700 !important;
-        font-size: 0.9rem !important;
-        letter-spacing: 0.02em !important;
-        min-width: 120px !important;
-      }
-
-      .search-btn:hover {
-        filter: brightness(110%) !important;
-      }
-    `;
+    style.textContent = '.search-bar-container{padding:0!important;width:100%!important;margin-left:0!important;left:0!important;margin-bottom:0!important}.search-bar{gap:.75em!important}input,select,.location-dropdown{background:rgba(255,255,255,.95)!important;border:1px solid rgba(255,255,255,.3)!important;border-radius:10px!important;color:#22382d!important;font-family:Montserrat,system-ui,sans-serif!important;font-size:.9rem!important}input::placeholder{color:#22382d!important;opacity:.7!important}input:focus,select:focus{box-shadow:0 0 0 2px rgba(226,173,55,.5)!important;border-color:#e2ad37!important}.search-btn{background:#e2ad37!important;color:#191b22!important;border-radius:10px!important;font-family:Montserrat,system-ui,sans-serif!important;font-weight:700!important;font-size:.9rem!important;letter-spacing:.02em!important;min-width:120px!important}.search-btn:hover{filter:brightness(110%)!important}';
     sr.prepend(style);
   }
 
-  // Start checking once DOM is ready
+  // Load after page is interactive
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', themeHospitableWidget);
+    document.addEventListener('DOMContentLoaded', loadHospitableWidget);
   } else {
-    themeHospitableWidget();
+    loadHospitableWidget();
   }
 </script>
 
