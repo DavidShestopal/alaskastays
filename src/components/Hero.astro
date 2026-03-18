@@ -5,16 +5,19 @@
   <!-- Background layers -->
   <div class="absolute inset-0 overflow-hidden">
     <!-- Hero photo -->
-    <img
-      src="/Alaska-Stays-Valley-View.avif"
-      alt="Alaskan cabin overlooking a mountain valley"
-      class="absolute inset-0 w-full h-full object-cover"
-      width="1920"
-      height="1080"
-      loading="eager"
-      decoding="async"
-      fetchpriority="high"
-    />
+    <picture>
+      <source media="(max-width: 768px)" srcset="/Alaska-Stays-Valley-View-mobile.avif" type="image/avif" />
+      <img
+        src="/Alaska-Stays-Valley-View.avif"
+        alt="Alaskan cabin overlooking a mountain valley"
+        class="absolute inset-0 w-full h-full object-cover"
+        width="1920"
+        height="1080"
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </picture>
     <!-- Dark overlay for text readability -->
     <div
       class="absolute inset-0"
